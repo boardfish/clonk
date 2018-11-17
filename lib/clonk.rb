@@ -115,29 +115,19 @@ module Clonk
       clients(realm: realm).select { |client| client['clientId'] == name }[0]
     end
 
-    def groups(realm: REALM, flattened: false)
-      response = parsed_response(
-        protocol: :get, 
-        path: "#{realm_admin_root(realm)}/groups", 
-      token: @token
-      )
-      response += response.map { |group| group['subGroups'] } if flattened
-      response.flatten
-    end
-
     # Runs on safe assumption that you won't name a subgroup like a group
     def get_group(name: nil, realm: REALM)
       groups(flattened: true, realm: realm)
         .select { |group| group['name'] == name }&.first
     end
 
-    def create_group(realm: REALM, name: nil)
-      parsed_response(
-        protocol: :post,
-        path: "#{realm_admin_root(realm)}/groups",
-        data: { name: name }, token: @token
-      )
-    end
+    # def create_group(realm: REALM, name: nil)
+    #   parsed_response(
+    #     protocol: :post,
+    #     path: "#{realm_admin_root(realm)}/groups",
+    #     data: { name: name }, token: @token
+    #   )
+    # end
 
     def users(realm: REALM)
       parsed_response(
@@ -252,3 +242,4 @@ module Clonk
   end
 end
 
+require 'clonk/group'
