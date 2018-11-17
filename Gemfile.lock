@@ -1,0 +1,24 @@
+PATH
+  remote: .
+  specs:
+    clonk (0.0.1)
+      faraday
+      faraday_middleware
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    faraday (0.15.3)
+      multipart-post (>= 1.2, < 3)
+    faraday_middleware (0.12.2)
+      faraday (>= 0.7.4, < 1.0)
+    multipart-post (2.0.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  clonk!
+
+BUNDLED WITH
+   1.16.1
