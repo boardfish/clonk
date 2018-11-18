@@ -23,7 +23,7 @@ module Clonk
     end
 
     def realm_admin_root(realm = REALM)
-      "/auth/admin/realms/#{realm}"
+      "#{BASE_URL}/auth/admin/realms/#{realm}"
     end
 
     def client_url(client: nil, realm: REALM)
