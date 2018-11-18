@@ -166,35 +166,10 @@ module Clonk
     # getPermissionScopes???
     # getPermissionResources???
 
-    def policy_defaults
-      {
-        logic: 'POSITIVE',
-        decisionStrategy: 'UNANIMOUS'
-      }
-    end
-
-    def define_policy(type: :role, name: nil, roles: [])
-      policy_defaults.merge(
-        type: type,
-        name: name,
-        roles: roles.map { |role| role['id'] },
-        description: description
-      )
-    end
-
-    def create_policy(type: :role, name: nil, roles: [], realm: REALM)
-      data = define_policy(type, name, roles)
-
-      parsed_response(
-        protocol: :post,
-        token: @token,
-        path: "#{client_url(client: @realm_management, realm: realm)}/authz/resource-server/policy/#{type}",
-        data: data
-      )
-    end
   end
 end
 
 require 'clonk/group'
 require 'clonk/user'
 require 'clonk/client'
+require 'clonk/policy'

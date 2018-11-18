@@ -38,5 +38,9 @@ module Clonk
     def self.find_by(name: nil, realm: REALM)
       where(name: name, realm: realm)&.first
     end
+
+    def url
+      "#{Clonk.realm_admin_root(@realm)}/clients/#{@id}"
+    end
   end
 end
