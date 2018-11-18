@@ -34,10 +34,6 @@ module Clonk
       "#{realm_admin_root(realm)}/groups/#{group['id']}"
     end
 
-    def user_url(user: nil, realm: REALM)
-      "#{realm_admin_root(realm)}/users/#{user['id']}"
-    end
-
     def admin_token
       data = {
         username: USERNAME,
@@ -73,13 +69,6 @@ module Clonk
         data: { id: name, realm: name, enabled: true },
         token: @token
       )
-    end
-
-    def create_user(realm: REALM, username: nil, enabled: true)
-      parsed_response(protocol: :post,
-                      path: "#{realm_admin_root(realm)}/users",
-                      data: { username: username, enabled: enabled },
-                      token: @token)
     end
 
     # dag stands for Direct Access Grants
@@ -118,17 +107,6 @@ module Clonk
 
     def get_client(name: nil, realm: REALM)
       clients(realm: realm).select { |client| client['clientId'] == name }[0]
-    end
-
-    def users(realm: REALM)
-      parsed_response(
-        path: "#{realm_admin_root(realm)}/users",
-        token: @token
-      )
-    end
-
-    def get_user(username: nil, realm: REALM)
-      users(realm: realm).select { |user| user['username'] == username }.first
     end
 
     def add_user_to_group(group: nil, user: nil, realm: REALM)
@@ -234,3 +212,4 @@ module Clonk
 end
 
 require 'clonk/group'
+require 'clonk/user'
