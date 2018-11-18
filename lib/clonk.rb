@@ -93,18 +93,6 @@ module Clonk
                       token: @token)
     end
 
-    def clients(realm: REALM)
-      parsed_response(
-        protocol: :get,
-        path: "#{realm_admin_root(realm)}/clients",
-        token: @token
-        )
-    end
-
-    def get_client(name: nil, realm: REALM)
-      clients(realm: realm).select { |client| client['clientId'] == name }[0]
-    end
-
     def add_user_to_group(group: nil, user: nil, realm: REALM)
       # put users/#{user['id']}/groups/#{group['id']}
       # data: gid, uid, realm
@@ -209,3 +197,4 @@ end
 
 require 'clonk/group'
 require 'clonk/user'
+require 'clonk/client'

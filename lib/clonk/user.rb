@@ -1,5 +1,8 @@
 module Clonk
   class User
+    attr_accessor :id
+    attr_reader :username
+
     def initialize(user_response, realm)
       @username = user_response['username']
       @id = user_response['id']
@@ -33,11 +36,11 @@ module Clonk
     def self.all(realm: REALM)
       Clonk.parsed_response(
         path: "#{Clonk.realm_admin_root(realm)}/users"
-      )
+      ).map { |user| new_from_id(user['id'], realm) }
     end
 
     def self.where(username: nil, realm: REALM)
-      all(realm: realm).select { |user| user['username'] == username }
+      all(realm: realm).select { |user| user.username == username }
     end
 
     def self.find_by(username: nil, realm: REALM)
