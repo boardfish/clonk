@@ -30,10 +30,6 @@ module Clonk
       "#{realm_admin_root(realm)}/clients/#{client['id']}"
     end
 
-    def group_url(group: nil, realm: REALM)
-      "#{realm_admin_root(realm)}/groups/#{group['id']}"
-    end
-
     def admin_token
       data = {
         username: USERNAME,

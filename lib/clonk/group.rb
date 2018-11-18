@@ -81,5 +81,9 @@ module Clonk
         new_from_id(id, realm)
       end
     end
+
+    def url
+      "#{Clonk.realm_admin_root(@realm)}/groups/#{@id}"
+    end
   end
 end
