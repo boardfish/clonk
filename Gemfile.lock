@@ -8,6 +8,7 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
+    byebug (10.0.2)
     faraday (0.15.3)
       multipart-post (>= 1.2, < 3)
     faraday_middleware (0.12.2)
@@ -18,7 +19,8 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  byebug
   clonk!
 
 BUNDLED WITH
-   1.16.1
+   1.16.2

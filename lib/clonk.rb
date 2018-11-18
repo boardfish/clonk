@@ -22,7 +22,7 @@ module Clonk
       end
     end
 
-    def realm_admin_root(realm: REALM)
+    def realm_admin_root(realm = REALM)
       "/auth/admin/realms/#{realm}"
     end
 
@@ -52,13 +52,18 @@ module Clonk
       )['access_token']
     end
 
-    def parsed_response(protocol: :get, path: '/', data: nil, token: nil)
+    def response(protocol: :get, path: '/', data: nil, token: admin_token)
       return unless %i[get post put delete].include?(protocol)
 
-      response = connection(token: token).public_send(protocol, path, data)
-      JSON.parse(response.body)
+      conn = connection(token: token).public_send(protocol, path, data)
+    end
+
+    def parsed_response(protocol: :get, path: '/', data: nil, token: admin_token)
+      resp = response(protocol: protocol, path: path, data: data, token: token)
+
+      JSON.parse(resp.body)
     rescue JSON::ParserError
-      response.body
+      resp.body
     end
 
     def create_realm(name: nil)
@@ -114,20 +119,6 @@ module Clonk
     def get_client(name: nil, realm: REALM)
       clients(realm: realm).select { |client| client['clientId'] == name }[0]
     end
-
-    # Runs on safe assumption that you won't name a subgroup like a group
-    def get_group(name: nil, realm: REALM)
-      groups(flattened: true, realm: realm)
-        .select { |group| group['name'] == name }&.first
-    end
-
-    # def create_group(realm: REALM, name: nil)
-    #   parsed_response(
-    #     protocol: :post,
-    #     path: "#{realm_admin_root(realm)}/groups",
-    #     data: { name: name }, token: @token
-    #   )
-    # end
 
     def users(realm: REALM)
       parsed_response(
