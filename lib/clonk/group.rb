@@ -29,7 +29,7 @@ module Clonk
     end
 
     # Creates a new group in SSO and casts it to an instance
-    def self.create(name, realm = REALM)
+    def self.create(name: nil, realm: REALM)
       new_group = new({ 'name' => name }, realm)
       response = new_group.save(realm)
       new_group.id = response.headers[:location].split('/')[-1]

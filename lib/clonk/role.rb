@@ -24,13 +24,13 @@ module Clonk
       ).map { |role| new_from_id(role['id'], realm) }
     end
 
-    def where(client: nil, target: nil, target_type: nil, realm: REALM, name: nil)
+    def self.where(client: nil, target: nil, target_type: nil, realm: REALM, name: nil)
       all(client: client, target: target, target_type: target_type, realm: realm)
-        .select { |role| role['name'] == name }
+        .select { |role| role.name == name }
     end
 
-    def find_by(client: nil, target: nil, target_type: nil, realm: REALM, name: nil)
-      where(client: client, target: target, target_type: target_type, realm: realm)&.first
+    def self.find_by(client: nil, target: nil, target_type: nil, realm: REALM, name: nil)
+      where(client: client, target: target, target_type: target_type, realm: realm, name: name)&.first
     end
 
     # Gets config inside SSO for role with ID in realm
