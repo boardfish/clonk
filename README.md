@@ -1,4 +1,4 @@
-# Clonk
+# Clonk [![Gem Version](https://badge.fury.io/rb/clonk.svg)](https://badge.fury.io/rb/clonk)
 
 This is a gem that'll help you seed an instance of Red Hat SSO. Right now, it's still a work-in-progress, but it shouldn't be long before it's got everything I think it needs.
 
