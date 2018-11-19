@@ -35,18 +35,20 @@ module Clonk
 
     # Only defines role policies
     # TODO: Expand to allow for other policy types
-    def self.define(type: :role, name: nil, objects: [], description: nil)
+    def self.define(type: :role, name: nil, objects: [], description: nil, groups_claim: nil)
       defaults.merge(
         type: type,
         name: name,
         roles: (objects.map { |role| { id: role.id, required: true } } if type == :role),
+        groups: (objects.map { |group| { id: group.id, extendChildren: false } } if type == :group),
+        groupsClaim: (groups_claim if type == :group),
         clients: (objects.map { |client| client.id } if type == :client),
         description: description
       ).delete_if { |k,v| v.nil?}
     end
 
-    def self.create(type: :role, name: nil, description: nil, objects: [], realm: REALM)
-      data = self.define(type: type, name: name, objects: objects, description: description)
+    def self.create(type: :role, name: nil, objects: [], description: nil, groups_claim: nil, realm: REALM)
+      data = self.define(type: type, name: name, objects: objects, description: description, groups_claim: groups_claim)
       realm_management_url = Clonk::Client.find_by(name: 'realm-management', realm: realm).url
       Clonk.parsed_response(
         protocol: :post,

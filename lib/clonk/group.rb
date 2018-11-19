@@ -116,5 +116,14 @@ module Clonk
       )
     end
 
+    def set_permissions(enabled: true)
+      Clonk.parsed_response(
+        protocol: :put,
+        path: "#{url}/management/permissions",
+        data: {
+          enabled: enabled
+        }
+      )
+    end
   end
 end
