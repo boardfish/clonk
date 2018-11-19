@@ -52,6 +52,15 @@ module Clonk
       end
     end
 
+    def create_subgroup(name: nil)
+      response = Clonk.parsed_response(
+        protocol: :post,
+        path: "#{url}/children",
+        data: { name: name }
+      )
+      self.class.new_from_id(response['id'], @realm)
+    end
+
     def subgroups
       config["subGroups"].map { |group| self.class.new_from_id(group['id'], @realm) }
     end
