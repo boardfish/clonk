@@ -117,26 +117,6 @@ module Clonk
       )
     end
 
-    def roles(client: nil, target: nil, target_type: nil, realm: REALM)
-      # need this to work with realms too
-      case target
-      when nil
-        path = "#{realm_admin_root(realm)}/clients/#{client['id']}/roles"
-      else
-        path = "#{realm_admin_root(realm)}/#{target_type}s/#{target['id']}/role-mappings/clients/#{client['id']}/available"
-      end
-      parsed_response(
-        protocol: :get,
-        path: path,
-        token: @token
-      )
-    end
-
-    def get_role(client: nil, target: nil, target_type: nil, realm: REALM, name: nil)
-      roles(client: client, target: target, target_type: target_type, realm: realm)
-        .select { |role| role['name'] == name }&.first
-    end
-
     def map_role(client: nil, role: nil, target: nil, target_type: :group, realm: REALM)
       client_path = client ? "clients/#{client['id']}" : 'realm'
       parsed_response(
@@ -173,3 +153,4 @@ require 'clonk/group'
 require 'clonk/user'
 require 'clonk/client'
 require 'clonk/policy'
+require 'clonk/role'

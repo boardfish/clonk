@@ -1,5 +1,31 @@
 module Clonk
   class Policy
+
+    attr_accessor :id
+    attr_reader :name
+
+    def initialize(policy_response, realm)
+      @id = policy_response['id']
+      @name = policy_response['name']
+      @realm = realm
+    end
+
+    # Gets config inside SSO for client with ID in realm
+    def self.get_config(id, realm = REALM)
+      Clonk.parsed_response(
+        path: "#{Clonk.realm_admin_root(realm)}/clients/#{Clonk::Client.find_by(name: 'realm-management').id}/authz/resource-server/policy/role/#{id}"
+      )
+    end
+
+    def config
+      self.class.get_config(@id, @realm)
+    end
+
+    # Creates a new Client instance from a client that exists in SSO
+    def self.new_from_id(id, realm = REALM)
+      new(get_config(id, realm), realm)
+    end
+
     def self.defaults
       {
         logic: 'POSITIVE',
@@ -18,8 +44,8 @@ module Clonk
       )
     end
 
-    def self.create(type: :role, name: nil, roles: [], realm: REALM)
-      data = self.define(type: type, name: name, roles: roles)
+    def self.create(type: :role, name: nil, description: nil, roles: [], realm: REALM)
+      data = self.define(type: type, name: name, roles: roles, description: description)
       realm_management_url = Clonk::Client.find_by(name: 'realm-management', realm: realm).url
       Clonk.parsed_response(
         protocol: :post,
