@@ -50,5 +50,15 @@ module Clonk
     def url
       "#{Clonk.realm_admin_root(@realm)}/users/#{@id}"
     end
+
+    def map_role(role: nil)
+      client_path = role.container_id == @realm ? 'realm' : "clients/#{role.container_id}"
+      response = Clonk.parsed_response(
+        protocol: :post,
+        data: [role.config],
+        path: "#{url}/role-mappings/#{client_path}"
+      )
+    end
+
   end
 end
