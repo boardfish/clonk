@@ -9,6 +9,27 @@ module Clonk
       @realm = realm
     end
 
+    def self.defaults
+      {
+        fullScopeAllowed: false
+      }
+    end
+    # dag stands for Direct Access Grants
+    def self.create(realm: REALM, name: nil, public_client: true, dag_enabled: true)
+      # TODO: Client with a secret
+      response = Clonk.response(
+        protocol: :post,
+        path: "#{Clonk.realm_admin_root(realm)}/clients",
+        data: defaults.merge(
+          clientId: name,
+          publicClient: public_client,
+          directAccessGrantsEnabled: dag_enabled
+        )
+      )
+      new_client_id = response.headers[:location].split('/')[-1]
+      new_from_id(new_client_id, realm)
+    end
+
     # Gets config inside SSO for client with ID in realm
     def self.get_config(id, realm = REALM)
       Clonk.parsed_response(

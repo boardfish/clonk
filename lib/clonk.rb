@@ -67,21 +67,6 @@ module Clonk
       )
     end
 
-    # dag stands for Direct Access Grants
-    def create_client(realm: REALM, id: nil, public_client: true, dag_enabled: true)
-      # TODO: Client with a secret
-      parsed_response(
-        protocol: :post,
-        path: "#{realm_admin_root(realm)}/clients",
-        data: {
-          clientId: id,
-          publicClient: public_client,
-          fullScopeAllowed: false,
-          directAccessGrantsEnabled: dag_enabled
-        }, token: @token
-      )
-    end
-
     def create_role(realm: REALM, name: nil, description: nil, scope_param_required: false, client: nil)
       parsed_response(protocol: :post,
                       path: "#{client_url(realm: realm, client: client)}/roles",
