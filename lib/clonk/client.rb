@@ -63,5 +63,13 @@ module Clonk
     def url
       "#{Clonk.realm_admin_root(@realm)}/clients/#{@id}"
     end
+
+    def map_scope(client: nil, role: nil, realm: REALM)
+      Clonk.parsed_response(
+        protocol: :post,
+        data: [role.config],
+        path: "#{url}/scope-mappings/clients/#{client.id}"
+      )
+    end
   end
 end

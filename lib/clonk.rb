@@ -99,15 +99,6 @@ module Clonk
     end
 
 
-    def map_scope(client: nil, role: nil, target: nil, realm: REALM)
-      parsed_response(
-        protocol: :post,
-        token: @token,
-        data: [role],
-        path: "#{client_url(client: target, realm: realm)}/scope-mappings/clients/#{client['id']}"
-      )
-    end
-
     def get_permission(id: nil, realm: REALM)
       parsed_response(
         token: @token,
