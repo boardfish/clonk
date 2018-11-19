@@ -26,10 +26,6 @@ module Clonk
       "#{BASE_URL}/auth/admin/realms/#{realm}"
     end
 
-    def client_url(client: nil, realm: REALM)
-      "#{realm_admin_root(realm)}/clients/#{client['id']}"
-    end
-
     def admin_token
       data = {
         username: USERNAME,
