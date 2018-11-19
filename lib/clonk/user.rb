@@ -60,5 +60,16 @@ module Clonk
       )
     end
 
+    def set_password(password: nil, temporary: false)
+      Clonk.parsed_response(
+        protocol: :put,
+        data: {
+          type: 'password',
+          value: password,
+          temporary: false
+        },
+        path: "#{url}/reset-password"
+      )
+    end
   end
 end
