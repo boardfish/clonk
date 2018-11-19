@@ -63,17 +63,6 @@ module Clonk
       )
     end
 
-    def create_role(realm: REALM, name: nil, description: nil, scope_param_required: false, client: nil)
-      parsed_response(protocol: :post,
-                      path: "#{client_url(realm: realm, client: client)}/roles",
-                      data: {
-                        name: name,
-                        description: description,
-                        scopeParamRequired: scope_param_required
-                      },
-                      token: @token)
-    end
-
     def set_permissions(object: nil, type: nil, enabled: true, realm: REALM)
       parsed_response(
         protocol: :put,
