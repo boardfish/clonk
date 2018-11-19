@@ -83,6 +83,12 @@ module Clonk
                       })
     end
 
+    def permissions
+      Clonk.parsed_response(
+        path: "#{url}/management/permissions"
+      )['scopePermissions'] || false
+    end
+
     def set_permissions(enabled: true)
       Clonk.parsed_response(
         protocol: :put,
