@@ -98,15 +98,6 @@ module Clonk
       )
     end
 
-    def map_role(client: nil, role: nil, target: nil, target_type: :group, realm: REALM)
-      client_path = client ? "clients/#{client['id']}" : 'realm'
-      parsed_response(
-        protocol: :post,
-        token: @token,
-        data: [role],
-        path: "#{realm_admin_root(realm)}/#{target_type}s/#{target['id']}/role-mappings/#{client_path}"
-      )
-    end
 
     def map_scope(client: nil, role: nil, target: nil, realm: REALM)
       parsed_response(

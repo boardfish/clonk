@@ -1,5 +1,9 @@
 module Clonk
   class Role
+    attr_accessor :id
+    attr_accessor :container_id
+    attr_reader :name
+
     def initialize(role_response, realm)
       @id = role_response['id']
       @realm = realm
