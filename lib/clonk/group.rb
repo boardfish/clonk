@@ -94,5 +94,18 @@ module Clonk
         path: "#{url}/role-mappings/#{client_path}"
       )
     end
+
+    def add_user(user: nil, realm: REALM)
+      Clonk.parsed_response(
+        protocol: :put,
+        path: "#{user.url}/groups/#{@id}",
+        data: {
+          groupId: @id,
+          userId: user.id,
+          realm: @realm
+        }
+      )
+    end
+
   end
 end

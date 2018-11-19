@@ -74,21 +74,6 @@ module Clonk
                       token: @token)
     end
 
-    def add_user_to_group(group: nil, user: nil, realm: REALM)
-      # put users/#{user['id']}/groups/#{group['id']}
-      # data: gid, uid, realm
-      parsed_response(
-        protocol: :put,
-        path: "#{user_url(user: user, realm: realm)}/groups/#{group['id']}",
-        data: {
-          groupId: group['id'],
-          userId: user['id'],
-          realm: realm
-        },
-        token: @token
-      )
-    end
-
     def set_permissions(object: nil, type: nil, enabled: true, realm: REALM)
       parsed_response(
         protocol: :put,
