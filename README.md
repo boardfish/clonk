@@ -32,7 +32,7 @@ Clonk exposes SSO objects as ActiveRecord-esque models. As a short demonstration
 
 ...but you can access their plain JSON config with `Group#config`.
 
-(So far, groups are all I've got, but everything else is in the process of being structured like this, and it's all sitting in `lib/clonk.rb`.)
+Right now, you can check the `lib` folder for details of which methods are exposed, but I'm looking to add documentation in the very near future. Think of this as a soft launch.
 
 ## Why?
 
