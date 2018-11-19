@@ -11,10 +11,10 @@ SSO_USERNAME="user"
 SSO_PASSWORD="password"
 ```
 
-It's recommended to spin up an SSO instance alongside this to see what effects you're having on it.
+It's recommended to spin up an SSO instance alongside this to see what effects you're having on it. Here, it's important that the `preview` profile is used, so that we can use the `realm-management` client to take care of permissions in the realm.
 
 ```
-docker run --rm -p 8080:8080 -e SSO_ADMIN_USERNAME=$SSO_USERNAME -e SSO_ADMIN_PASSWORD=$SSO_PASSWORD registry.access.redhat.com/redhat-sso-7/sso72-openshift
+docker run --rm -p 8080:8080 -e JAVA_OPTS_APPEND="-Dkeycloak.profile=preview" -e SSO_ADMIN_USERNAME=user -e SSO_ADMIN_PASSWORD=password registry.access.redhat.com/redhat-sso-7/sso72-openshift
 ```
 
 ## Usage
