@@ -54,15 +54,6 @@ module Clonk
       resp.body
     end
 
-    def create_realm(name: nil)
-      parsed_response(
-        protocol: :post,
-        path: '/auth/admin/realms',
-        data: { id: name, realm: name, enabled: true },
-        token: @token
-      )
-    end
-
     def set_permissions(object: nil, type: nil, enabled: true, realm: REALM)
       parsed_response(
         protocol: :put,
@@ -91,3 +82,4 @@ require 'clonk/user'
 require 'clonk/client'
 require 'clonk/policy'
 require 'clonk/role'
+require 'clonk/realm'

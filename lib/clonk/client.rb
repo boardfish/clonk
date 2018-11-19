@@ -92,5 +92,11 @@ module Clonk
         }
       )
     end
+
+    def secret
+      Clonk.parsed_response(
+        path: "#{url}/client-secret"
+      )['value']
+    end
   end
 end
