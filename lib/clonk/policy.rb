@@ -10,21 +10,33 @@ module Clonk
       @realm = realm
     end
 
-    # Gets config inside SSO for client with ID in realm
+    ##
+    # Gets config inside SSO for policy with ID in realm.
+
     def self.get_config(id, realm = REALM)
       Clonk.parsed_response(
         path: "#{Clonk.realm_admin_root(realm)}/clients/#{Clonk::Client.find_by(name: 'realm-management').id}/authz/resource-server/policy/role/#{id}"
       )
     end
 
+    ##
+    # Gets config inside SSO for policy.
+
     def config
       self.class.get_config(@id, @realm)
     end
 
-    # Creates a new Client instance from a client that exists in SSO
+    ##
+    # Creates a new Policy instance from a policy that exists in SSO
+
     def self.new_from_id(id, realm = REALM)
       new(get_config(id, realm), realm)
     end
+
+    ##
+    # Returns defaults for a policy.
+    # I've found no reason to override these, but then again, I'm not 100% sure
+    # how they work. Overrides will be added to necessary methods if requested.
 
     def self.defaults
       {
@@ -33,8 +45,14 @@ module Clonk
       }
     end
 
-    # Only defines role policies
+    ##
+    # Returns a policy definition that can then be used to create a policy in SSO.
+    # Only defines role, group and client policies
+    #--
     # TODO: Expand to allow for other policy types
+    # TODO: Don't assume role as default type
+    #++
+
     def self.define(type: :role, name: nil, objects: [], description: nil, groups_claim: nil)
       defaults.merge(
         type: type,
@@ -46,6 +64,9 @@ module Clonk
         description: description
       ).delete_if { |k,v| v.nil?}
     end
+
+    ##
+    # Defines and creates a policy in SSO.
 
     def self.create(type: :role, name: nil, objects: [], description: nil, groups_claim: nil, realm: REALM)
       data = self.define(type: type, name: name, objects: objects, description: description, groups_claim: groups_claim)
