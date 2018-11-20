@@ -13,6 +13,10 @@ REALM = ENV.fetch('SSO_REALM')
 
 module Clonk
   class << self
+
+    ##
+    # Defines a Faraday::Connection object linked to the SSO instance.
+
     def connection(token: nil, raise_error: true, json: true)
       Faraday.new(url: BASE_URL) do |faraday|
         faraday.request(json ? :json : :url_encoded)
@@ -22,9 +26,15 @@ module Clonk
       end
     end
 
+    ##
+    # Returns the admin API root for the realm.
+
     def realm_admin_root(realm = REALM)
       "#{BASE_URL}/auth/admin/realms/#{realm}"
     end
+
+    ##
+    # Retrieves a token for the admin user.
 
     def admin_token
       data = {
@@ -40,11 +50,27 @@ module Clonk
       )['access_token']
     end
 
+    ##
+    # Returns a Faraday::Response for an API call via the given method.
+    # Always uses an admin token.
+    #--
+    # FIXME: Rename protocol to method - more descriptive
+    #++
+
     def response(protocol: :get, path: '/', data: nil, token: admin_token)
       return unless %i[get post put delete].include?(protocol)
 
       conn = connection(token: token).public_send(protocol, path, data)
     end
+
+    ##
+    # Returns a parsed JSON response for an API call via the given method.
+    # Useful in instances where only the data is necessary, and not
+    # HTTP status confirmation that the desired effect was caused.
+    # Always uses an admin token.
+    #--
+    # FIXME: Rename protocol to method - more descriptive
+    #++
 
     def parsed_response(protocol: :get, path: '/', data: nil, token: admin_token)
       resp = response(protocol: protocol, path: path, data: data, token: token)
@@ -53,6 +79,12 @@ module Clonk
     rescue JSON::ParserError
       resp.body
     end
+
+    ##
+    # Enables permissions for the given object.
+    #--
+    # TODO: Add this method to other models that need it, if any
+    #++
 
     def set_permissions(object: nil, type: nil, enabled: true, realm: REALM)
       parsed_response(
@@ -63,6 +95,11 @@ module Clonk
       )
     end
 
+    ##
+    # Returns the data for the permission with the given ID.
+    #--
+    # TODO: Move this method into Permission
+    #++
 
     def get_permission(id: nil, realm: REALM)
       parsed_response(
@@ -70,10 +107,6 @@ module Clonk
         path: "#{client_url(client: @realm_management, realm: realm)}/authz/resource-server/permission/scope/#{id}"
       )
     end
-
-    # getPermissionScopes???
-    # getPermissionResources???
-
   end
 end
 
