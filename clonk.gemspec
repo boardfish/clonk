@@ -3,7 +3,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |s|
   s.name = %q{clonk}
-  s.version = "1.0.0alpha3"
+  s.version = "1.0.0alpha4"
   s.authors = ["Simon Fish"]
   s.date = %q{2018-11-19}
   s.summary = %q{Keycloak/RHSSO admin API client}
