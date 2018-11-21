@@ -1,0 +1,8 @@
+lib/clonk.rb 20e9972dadb66fb1771722d9b06e3ccdad9e1022
+lib/clonk/role.rb 56ea266896bcb2b45cc48ee633c83639d2135296
+lib/clonk/user.rb a7da95bf320c5aaa7cc7708d9fe2ffd10f4eda23
+lib/clonk/group.rb 29edd3c17b7babce87bb544333d42455ec1a5c2e
+lib/clonk/realm.rb 0f933b0fd76545c049a5cb228706f13117fbcbb3
+lib/clonk/client.rb 41af98a3b30b4adff27b5d62c6b26559335b369f
+lib/clonk/policy.rb 8b8840f6763a1a320759a3c9d052758f25b17463
+lib/clonk/permission.rb 4466f7c1d3bef61521df03ee0b92c85f7be6cb66

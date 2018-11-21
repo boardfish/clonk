@@ -1,14 +1,14 @@
+lib = File.expand_path('../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+
 Gem::Specification.new do |s|
   s.name = %q{clonk}
   s.version = "1.0.0alpha3"
   s.authors = ["Simon Fish"]
   s.date = %q{2018-11-19}
   s.summary = %q{Keycloak/RHSSO admin API client}
-  s.files = [
-    "Gemfile",
-    "lib/clonk.rb"
-  ]
-  s.require_paths = ["lib"]
+  s.files = `git ls-files`.split("\n")
+  s.require_paths = Dir.glob("lib/**/*")
   s.add_runtime_dependency 'faraday'
   s.add_runtime_dependency 'faraday_middleware'
   s.metadata["yard.run"] = "yardoc"
