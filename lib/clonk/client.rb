@@ -117,13 +117,14 @@ module Clonk
 
     def create_role(realm: REALM, name: nil, description: nil, scope_param_required: false)
       # TODO: Create realm roles
-      Clonk.parsed_response(protocol: :post,
+      response = Clonk.response(protocol: :post,
                       path: "#{url}/roles",
                       data: {
                         name: name,
                         description: description,
                         scopeParamRequired: scope_param_required
                       })
+      Role.find_by(name: name, client: self)
     end
 
     ##
