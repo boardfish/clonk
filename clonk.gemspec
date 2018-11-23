@@ -7,8 +7,7 @@ Gem::Specification.new do |s|
   s.authors = ["Simon Fish"]
   s.date = %q{2018-11-19}
   s.summary = %q{Keycloak/RHSSO admin API client}
-  s.files = `git ls-files`.split("\n")
-  s.require_paths = Dir.glob("lib/**/*")
+  s.files = Dir['lib/**/**.rb']
   s.add_runtime_dependency 'faraday'
   s.add_runtime_dependency 'faraday_middleware'
   s.metadata["yard.run"] = "yardoc"
