@@ -3,9 +3,9 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |s|
   s.name = %q{clonk}
-  s.version = "1.0.0alpha5"
+  s.version = "1.0.0alpha6"
   s.authors = ["Simon Fish"]
-  s.date = %q{2018-11-19}
+  s.date = %q{2018-11-23}
   s.summary = %q{Keycloak/RHSSO admin API client}
   s.files = Dir['lib/**/**.rb']
   s.add_runtime_dependency 'faraday'

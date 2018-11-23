@@ -103,5 +103,12 @@ module Clonk
         path: "#{url}/reset-password"
       )
     end
+
+    def delete
+      Clonk.response(
+        protocol: :delete,
+        path: url
+      )
+    end
   end
 end
