@@ -6,7 +6,7 @@ describe 'Clonk::Client' do
     assert_requested :get, "http://sso:8080/auth/admin/realms/test/clients"
   end
 
-  it 'requests to the right endpoint' do
+  it 'returns all clients' do
     clients = Clonk::Client.all
     expect(clients.count).to be >= 5
   end
