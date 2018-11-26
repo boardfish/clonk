@@ -10,6 +10,7 @@ services:
       - '.sso_credentials.env'
     volumes:
       - ./seed_script.rb:/seed_script.rb:ro
+      - ./spec:/spec:ro
   sso:
     image: jboss/keycloak
     env_file:
