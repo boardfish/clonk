@@ -72,7 +72,7 @@ module Clonk
       data = self.define(type: type, name: name, objects: objects, description: description, groups_claim: groups_claim)
       realm_management_url = Clonk::Client.find_by(name: 'realm-management', realm: realm).url
       Clonk.parsed_response(
-        protocol: :post,
+        method: :post,
         path: "#{realm_management_url}/authz/resource-server/policy/#{type}",
         data: data
       )

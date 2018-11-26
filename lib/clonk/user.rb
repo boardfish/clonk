@@ -37,7 +37,7 @@ module Clonk
     # username
 
     def self.create(realm: REALM, username: nil, enabled: true)
-      response = Clonk.response(protocol: :post,
+      response = Clonk.response(method: :post,
                       path: "#{Clonk.realm_admin_root(realm)}/users",
                       data: { username: username, enabled: enabled }
                       )
@@ -80,7 +80,7 @@ module Clonk
     def map_role(role: nil)
       client_path = role.container_id == @realm ? 'realm' : "clients/#{role.container_id}"
       response = Clonk.parsed_response(
-        protocol: :post,
+        method: :post,
         data: [role.config],
         path: "#{url}/role-mappings/#{client_path}"
       )
@@ -94,7 +94,7 @@ module Clonk
 
     def set_password(password: nil, temporary: false)
       Clonk.parsed_response(
-        protocol: :put,
+        method: :put,
         data: {
           type: 'password',
           value: password,
@@ -106,7 +106,7 @@ module Clonk
 
     def delete
       Clonk.response(
-        protocol: :delete,
+        method: :delete,
         path: url
       )
     end

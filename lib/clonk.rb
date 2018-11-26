@@ -57,10 +57,10 @@ module Clonk
     # FIXME: Rename protocol to method - more descriptive
     #++
 
-    def response(protocol: :get, path: '/', data: nil, token: admin_token)
-      return unless %i[get post put delete].include?(protocol)
+    def response(method: :get, path: '/', data: nil, token: admin_token)
+      return unless %i[get post put delete].include?(method)
 
-      conn = connection(token: token).public_send(protocol, path, data)
+      conn = connection(token: token).public_send(method, path, data)
     end
 
     ##
@@ -72,8 +72,8 @@ module Clonk
     # FIXME: Rename protocol to method - more descriptive
     #++
 
-    def parsed_response(protocol: :get, path: '/', data: nil, token: admin_token)
-      resp = response(protocol: protocol, path: path, data: data, token: token)
+    def parsed_response(method: :get, path: '/', data: nil, token: admin_token)
+      resp = response(method: method, path: path, data: data, token: token)
 
       JSON.parse(resp.body)
     rescue JSON::ParserError
@@ -88,7 +88,7 @@ module Clonk
 
     def set_permissions(object: nil, type: nil, enabled: true, realm: REALM)
       parsed_response(
-        protocol: :put,
+        method: :put,
         path: "#{realm_admin_root(realm)}/#{type}s/#{object['id']}/management/permissions",
         data: { enabled: enabled },
         token: @token

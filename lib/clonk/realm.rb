@@ -8,7 +8,7 @@ module Clonk
     # Creates a realm with the given name, returning it as a Realm object
     def self.create(name: nil)
       Clonk.parsed_response(
-        protocol: :post,
+        method: :post,
         path: '/auth/admin/realms',
         data: { id: name, realm: name, enabled: true }
       )

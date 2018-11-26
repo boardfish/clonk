@@ -29,7 +29,7 @@ module Clonk
     def self.create(realm: REALM, name: nil, public_client: true, dag_enabled: true)
       # TODO: Client with a secret
       response = Clonk.response(
-        protocol: :post,
+        method: :post,
         path: "#{Clonk.realm_admin_root(realm)}/clients",
         data: defaults.merge(
           clientId: name,
@@ -104,7 +104,7 @@ module Clonk
 
     def map_scope(client: nil, role: nil, realm: REALM)
       Clonk.parsed_response(
-        protocol: :post,
+        method: :post,
         data: [role.config],
         path: "#{url}/scope-mappings/clients/#{client.id}"
       )
@@ -117,7 +117,7 @@ module Clonk
 
     def create_role(realm: REALM, name: nil, description: nil, scope_param_required: false)
       # TODO: Create realm roles
-      response = Clonk.response(protocol: :post,
+      response = Clonk.response(method: :post,
                       path: "#{url}/roles",
                       data: {
                         name: name,
@@ -143,7 +143,7 @@ module Clonk
 
     def set_permissions(enabled: true)
       Clonk.parsed_response(
-        protocol: :put,
+        method: :put,
         path: "#{url}/management/permissions",
         data: {
           enabled: enabled

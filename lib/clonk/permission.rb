@@ -75,7 +75,7 @@ module Clonk
       Clonk.parsed_response(
         path: url,
         data: data,
-        protocol: :put
+        method: :put
       )
     end
   end

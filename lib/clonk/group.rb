@@ -39,13 +39,13 @@ module Clonk
     def save(realm = REALM)
       if @id
         Clonk.parsed_response(
-          protocol: :put,
+          method: :put,
           path: "#{Clonk.realm_admin_root(@realm)}/groups/#{@id}",
           data: config.merge('name' => @name)
         )
       else
         Clonk.response(
-          protocol: :post,
+          method: :post,
           path: "#{Clonk.realm_admin_root(realm)}/groups",
           data: { name: @name }
         )
@@ -54,7 +54,7 @@ module Clonk
 
     def create_subgroup(name: nil)
       response = Clonk.parsed_response(
-        protocol: :post,
+        method: :post,
         path: "#{url}/children",
         data: { name: name }
       )
@@ -67,7 +67,7 @@ module Clonk
 
     def self.all(realm: REALM, flattened: false)
       response = Clonk.parsed_response(
-        protocol: :get,
+        method: :get,
         path: "#{Clonk.realm_admin_root(realm)}/groups",
       )
       response += response.map { |group| group['subGroups'] } if flattened
@@ -98,7 +98,7 @@ module Clonk
     def map_role(role: nil)
       client_path = role.container_id == @realm ? 'realm' : "clients/#{role.container_id}"
       response = Clonk.parsed_response(
-        protocol: :post,
+        method: :post,
         data: [role.config],
         path: "#{url}/role-mappings/#{client_path}"
       )
@@ -106,7 +106,7 @@ module Clonk
 
     def add_user(user: nil, realm: REALM)
       Clonk.parsed_response(
-        protocol: :put,
+        method: :put,
         path: "#{user.url}/groups/#{@id}",
         data: {
           groupId: @id,
@@ -118,7 +118,7 @@ module Clonk
 
     def set_permissions(enabled: true)
       Clonk.parsed_response(
-        protocol: :put,
+        method: :put,
         path: "#{url}/management/permissions",
         data: {
           enabled: enabled
