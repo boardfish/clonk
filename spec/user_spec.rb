@@ -40,8 +40,8 @@ describe 'Clonk::User' do
   end
 
   it 'finds only the user with the given ID' do
-    20.times { create_user(Faker::Overwatch.unique.hero) }
-    print Clonk::User.all
-    expect(Clonk::User.find_by(username: 'sombra')).to be_an_instance_of(Clonk::User)
+    19.times { create_user(Faker::Overwatch.unique.hero) }
+    create_user('jeff')
+    expect(Clonk::User.find_by(username: 'jeff')).to be_an_instance_of(Clonk::User)
   end
 end
