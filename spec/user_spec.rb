@@ -1,6 +1,16 @@
 require_relative 'spec_helper'
 
 describe 'Clonk::User' do
+  before(:all) do
+    Clonk::User.all.each do |user|
+      Clonk.response(
+        method: :delete,
+                  path: "#{Clonk.realm_admin_root('test')}/users/#{user.id}"
+                  )
+    end
+    Clonk.response()
+  end
+
   def create_user(username)
     response = Clonk.response(method: :post,
                   path: "#{Clonk.realm_admin_root('test')}/users",
@@ -14,7 +24,6 @@ describe 'Clonk::User' do
   end
 
   it 'sends a request to the users endpoint' do
-    Clonk::User.all
     assert_requested :get, "http://sso:8080/auth/admin/realms/test/users"
   end
 
