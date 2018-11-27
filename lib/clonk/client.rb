@@ -159,5 +159,12 @@ module Clonk
         path: "#{url}/client-secret"
       )['value']
     end
+
+    def delete
+      Clonk.response(
+        method: :delete,
+        path: url
+      )
+    end 
   end
 end

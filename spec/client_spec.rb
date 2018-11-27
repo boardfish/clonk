@@ -20,9 +20,16 @@ describe 'Clonk::Client' do
   end
 
   it 'creates another client in SSO' do
+    clear_clients
     list_pre_addition = Clonk::Client.all
     new_client = Clonk::Client.create(name: Faker::Overwatch.unique.hero)
     list_post_addition = Clonk::Client.all
     expect(list_post_addition.count - list_pre_addition.count).to eq(1)
   end
+
+  def clear_clients
+    default_clients = %w[account admin-cli broker realm-management security-admin-console]
+    Clonk::Client.all.reject { |client| default_clients.include?(client.name) }.map { |client| client.delete }
+  end
 end
+

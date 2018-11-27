@@ -17,6 +17,7 @@ describe 'Clonk::Role' do
     expect(Clonk::Role.all(client: client)).to all(be_a(Clonk::Role))
   end
 
+  # Flaky
   it 'creates another role in SSO' do
     client = Clonk::Client.all.first
     list_pre_addition = Clonk::Role.all(client: client)

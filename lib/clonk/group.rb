@@ -125,5 +125,12 @@ module Clonk
         }
       )
     end
+
+    def delete
+      Clonk.response(
+        method: :delete,
+        path: url
+      )
+    end 
   end
 end

@@ -49,6 +49,7 @@ describe 'Clonk::User' do
   end
 
   it 'finds only the user with the given ID' do
+    Clonk::User.all.map { |user| user.delete }
     19.times { create_user(Faker::Overwatch.unique.hero) }
     create_user('jeff')
     expect(Clonk::User.find_by(username: 'jeff')).to be_an_instance_of(Clonk::User)
