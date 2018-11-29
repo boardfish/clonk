@@ -1,7 +1,10 @@
 module Clonk
   class Realm
+
+    attr_reader :name
+
     def initialize(realm_response)
-      @name = realm_response['id']
+      @name = realm_response['id'] || realm_response['realm']
     end
 
     ##
@@ -47,6 +50,34 @@ module Clonk
 
     def self.new_from_id(id: nil)
       new(find_by(name: id))
+    end
+
+    ##
+    # Returns the admin API root for the realm.
+
+    def realm_admin_root(realm = @realm)
+      "#{@base_url}/auth/admin/realms/#{realm.id}"
+    end
+
+    ##
+    # Lists clients in the realm
+
+    def clients
+      Clonk.parsed_response(path: "#{realm_admin_root}/clients")
+    end
+
+    ##
+    # Lists groups in the realm
+
+    def groups
+      Clonk.parsed_response(path: "#{realm_admin_root}/groups")
+    end
+
+    ##
+    # Lists users in the realm
+
+    def users
+      Clonk.parsed_response(path: "#{realm_admin_root}/users")
     end
   end
 end

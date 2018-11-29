@@ -3,10 +3,9 @@ module Clonk
     attr_accessor :id
     attr_reader :username
 
-    def initialize(user_response, realm)
+    def initialize(user_response)
       @username = user_response['username']
       @id = user_response['id']
-      @realm = realm
     end
 
     ##
