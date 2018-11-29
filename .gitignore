@@ -2,3 +2,5 @@
 .env
 Gemfile
 Gemfile.lock
+dist
+doc
