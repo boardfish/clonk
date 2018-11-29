@@ -2,6 +2,9 @@ require_relative 'client'
 
 module Clonk
   class Connection
+    # Can be used to init a client against one realm with a token from the master
+    attr_writer :access_token
+
     def initialize(base_url:, realm_id:, username:, password:, client_id:)
       @base_url = base_url
       @client_id = client_id
@@ -67,6 +70,10 @@ module Clonk
 
     def create_instance_of(class_name, response)
       Object.const_get('Clonk').const_get(class_name).new(response) || response
+    end
+
+    def config(object)
+      parsed_response(path: realm_admin_root + "/#{object.class.name.split('::').last.downcase}s/#{object.id}")
     end
 
     # Connection detail
