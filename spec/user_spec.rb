@@ -3,55 +3,47 @@
 require_relative 'spec_helper'
 
 describe 'Clonk::User' do
-  before(:all) do
-    Clonk::User.all.each do |user|
-      Clonk.response(
-        method: :delete,
-        path: "#{Clonk.realm_admin_root('test')}/users/#{user.id}"
-      )
-    end
-    Clonk.response
-  end
-
-  def create_user(username)
-    response = Clonk.response(method: :post,
-                              path: "#{Clonk.realm_admin_root('test')}/users",
-                              data: { username: username, enabled: true })
-    Clonk::User.new_from_id(response.headers[:location].split('/')[-1], 'test')
-  end
+  let(:client) { admin_client }
+  let(:users) { admin_client.users }
 
   before(:all) do
-    2.times { create_user(Faker::Overwatch.unique.hero) }
+    2.times { admin_client.create_user(username: Faker::Overwatch.unique.hero) }
   end
 
   it 'sends a request to the users endpoint' do
+    skip 'pending setup of client to point at test realm'
+    users
     assert_requested :get, 'http://sso:8080/auth/admin/realms/test/users'
   end
 
   it 'returns an Array' do
-    expect(Clonk::User.all).to be_an_instance_of(Array)
+    expect(users).to be_an_instance_of(Array)
   end
 
   it 'returns an Array of User' do
-    expect(Clonk::User.all).to all(be_a(Clonk::User))
+    expect(users).to all(be_a(Clonk::User))
   end
 
   it 'sends a delete request to the right route in SSO' do
-    deleted_user = Clonk::User.all.first
+    skip 'pending addition of delete method'
+    deleted_user = users.first
     deleted_user.delete
     assert_requested :get, "http://sso:8080/auth/admin/realms/test/users/#{deleted_user.id}"
   end
 
   it 'deletes the user from SSO' do
-    users_pre_delete = Clonk::User.all
+    skip 'pending addition of delete method'
+    users_pre_delete = users
     deleted_user = users_pre_delete.first
     deleted_user.delete
-    expect(Clonk::User.all).not_to include(deleted_user)
+    expect(admin_client.users).not_to include(deleted_user)
   end
 
   it 'finds only the user with the given ID' do
-    Clonk::User.all.map(&:delete)
-    19.times { create_user(Faker::Overwatch.unique.hero) }
+    skip 'pending addition of delete method'
+    skip 'pending addition of find_by'
+    users.map(&:delete)
+    19.times { admin_client.create_user(username: Faker::Overwatch.unique.hero) }
     create_user('jeff')
     expect(Clonk::User.find_by(username: 'jeff')).to be_an_instance_of(Clonk::User)
   end
