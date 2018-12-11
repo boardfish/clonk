@@ -26,23 +26,6 @@ module Clonk
     end
 
     ##
-    # Creates a role within this client.
-    # it will be visible in tokens given by this client during authentication,
-    # as it is already in scope.
-
-    def create_role(realm: REALM, name: nil, description: nil, scope_param_required: false)
-      # TODO: Create realm roles
-      response = Clonk.response(method: :post,
-                                path: "#{url}/roles",
-                                data: {
-                                  name: name,
-                                  description: description,
-                                  scopeParamRequired: scope_param_required
-                                })
-      Role.find_by(name: name, client: self)
-    end
-
-    ##
     # Lists the client's permission IDs, if permissions are enabled.
     # These will be returned as either a boolean (false) if disabled,
     # or a hash of permission types and IDs.

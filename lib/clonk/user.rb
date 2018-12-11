@@ -28,18 +28,6 @@ module Clonk
     # FIXME: Currently always a permanent password Make that temporary flag do things.
     #++
 
-    def set_password(password: nil, temporary: false)
-      Clonk.parsed_response(
-        method: :put,
-        data: {
-          type: 'password',
-          value: password,
-          temporary: false
-        },
-        path: "#{url}/reset-password"
-      )
-    end
-
     def delete
       Clonk.response(
         method: :delete,

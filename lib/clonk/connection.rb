@@ -59,6 +59,16 @@ module Clonk
       create_object(type: 'Client', data: { fullScopeAllowed: false }.merge(data))
     end
 
+
+    ##
+    # Creates a role within the given client.
+    # it will be visible in tokens given by this client during authentication,
+    # as it is already in scope.
+
+    def create_role(client:, **data)
+      create_object(type: 'Role', root: url_for(client), data: data)
+    end
+
     def create_group(**data)
       return if data[:name].nil?
 
@@ -114,6 +124,18 @@ module Clonk
         method: :post,
         data: [config(role)],
         path: "#{url_for(target)}/role-mappings/#{client_path}"
+      )
+    end
+
+    def set_password_for(user, password: nil, temporary: false)
+      response(
+        method: :put,
+        data: {
+          type: 'password',
+          value: password,
+          temporary: temporary
+        },
+        path: "#{url_for(user)}/reset-password"
       )
     end
 
@@ -180,7 +202,7 @@ module Clonk
 
     def url_for(target)
       class_name = target.class.name.downcase
-      "#{realm_admin_root}/#{class_name}s/#{target.id}"
+      "#{realm_admin_root}/#{target.class.name.split('::').last.downcase}s/#{target.id}"
     end
   end
 end
