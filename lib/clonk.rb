@@ -13,7 +13,6 @@ REALM = ENV.fetch('SSO_REALM')
 
 module Clonk
   class << self
-
     ##
     # Defines a Faraday::Connection object linked to the SSO instance.
 

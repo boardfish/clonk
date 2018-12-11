@@ -1,6 +1,7 @@
+# frozen_string_literal: true
+
 module Clonk
   class Policy
-
     attr_accessor :id
     attr_reader :name
 
@@ -60,16 +61,16 @@ module Clonk
         roles: (objects.map { |role| { id: role.id, required: true } } if type == :role),
         groups: (objects.map { |group| { id: group.id, extendChildren: false } } if type == :group),
         groupsClaim: (groups_claim if type == :group),
-        clients: (objects.map { |client| client.id } if type == :client),
+        clients: (objects.map(&:id) if type == :client),
         description: description
-      ).delete_if { |k,v| v.nil?}
+      ).delete_if { |_k, v| v.nil? }
     end
 
     ##
     # Defines and creates a policy in SSO.
 
     def self.create(type: :role, name: nil, objects: [], description: nil, groups_claim: nil, realm: REALM)
-      data = self.define(type: type, name: name, objects: objects, description: description, groups_claim: groups_claim)
+      data = define(type: type, name: name, objects: objects, description: description, groups_claim: groups_claim)
       realm_management_url = Clonk::Client.find_by(name: 'realm-management', realm: realm).url
       Clonk.parsed_response(
         method: :post,

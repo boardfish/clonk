@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Clonk
   class Permission
     def initialize(permission_response, realm)
@@ -32,7 +34,7 @@ module Clonk
 
     def config
       Clonk.parsed_response(
-        path: "#{url}"
+        path: url.to_s
       )
     end
 
@@ -67,11 +69,11 @@ module Clonk
     # Adds the given policy/resource/scope IDs to this permission in SSO.
 
     def update(policies: [], resources: [], scopes: [])
-      data = config.merge(  
+      data = config.merge(
         policies: self.policies + policies,
         resources: self.resources + resources,
         scopes: self.scopes + scopes
-       )
+      )
       Clonk.parsed_response(
         path: url,
         data: data,

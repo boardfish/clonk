@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'client'
 
 module Clonk
@@ -9,11 +11,11 @@ module Clonk
       @base_url = base_url
       @client_id = client_id
       unless [username, password].all? &:nil?
-        access_token(username: username, password: password, realm_id: realm_id, client_id: client_id) 
+        access_token(username: username, password: password, realm_id: realm_id, client_id: client_id)
         realm_response = parsed_response(path: "/auth/realms/#{realm_id}")
         @realm = create_instance_of('Realm', realm_response)
       end
-      @realm = create_instance_of('Realm', { id: realm_id }) unless @realm
+      @realm ||= create_instance_of('Realm', id: realm_id)
     end
 
     def clients
@@ -26,13 +28,15 @@ module Clonk
 
     def groups(user:)
       return objects(type: 'Group') unless user
+
       objects(type: 'Group', path: "/users/#{user.id}/groups")
     end
 
     def subgroups(group)
       subgroups = config(group)['subGroups']
       return [] if subgroups.nil?
-      subgroups.map { |group| create_instance_of('Group', group)}
+
+      subgroups.map { |group| create_instance_of('Group', group) }
     end
 
     def users
@@ -53,6 +57,7 @@ module Clonk
 
     def create_group(**data)
       return if data[:name].nil?
+
       create_object(type: 'Group', data: data)
     end
 
@@ -96,7 +101,6 @@ module Clonk
       )
     end
 
-
     # Connection detail
     ####################
 
@@ -112,7 +116,7 @@ module Clonk
         path: "/auth/realms/#{realm_id}/protocol/openid-connect/token",
         connection_params: { json: false, raise_error: true },
         data: data
-        )['access_token']
+      )['access_token']
     end
 
     ##

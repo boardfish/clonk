@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'spec_helper'
 
 describe 'Clonk::Connection' do
@@ -5,13 +7,13 @@ describe 'Clonk::Connection' do
   context 'users' do
     it 'sends a request to the users endpoint' do
       client.users
-      assert_requested :get, "http://sso:8080/auth/admin/realms/master/users"
+      assert_requested :get, 'http://sso:8080/auth/admin/realms/master/users'
     end
-  
+
     it 'returns an Array' do
       expect(client.users).to be_an_instance_of(Array)
     end
-  
+
     it 'returns an Array of User' do
       expect(client.users).to all(be_a(Clonk::User))
     end
@@ -32,13 +34,13 @@ describe 'Clonk::Connection' do
   context 'clients' do
     it 'sends a request to the clients endpoint' do
       client.clients
-      assert_requested :get, "http://sso:8080/auth/admin/realms/master/clients"
+      assert_requested :get, 'http://sso:8080/auth/admin/realms/master/clients'
     end
-  
+
     it 'returns an Array' do
       expect(client.clients).to be_an_instance_of(Array)
     end
-  
+
     it 'returns an Array of Client' do
       expect(client.clients).to all(be_a(Clonk::Client))
     end
@@ -59,13 +61,13 @@ describe 'Clonk::Connection' do
   context 'groups' do
     it 'sends a request to the clients endpoint' do
       client.groups
-      assert_requested :get, "http://sso:8080/auth/admin/realms/master/groups"
+      assert_requested :get, 'http://sso:8080/auth/admin/realms/master/groups'
     end
-  
+
     it 'returns an Array' do
       expect(client.groups).to be_an_instance_of(Array)
     end
-  
+
     it 'returns an Array of Group' do
       expect(client.groups).to all(be_a(Clonk::Group))
     end

@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require_relative 'spec_helper'
 
 describe 'Clonk::Client' do
   it 'requests to the right endpoint' do
     Clonk::Client.all
-    assert_requested :get, "http://sso:8080/auth/admin/realms/test/clients"
+    assert_requested :get, 'http://sso:8080/auth/admin/realms/test/clients'
   end
 
   it 'returns all clients' do
@@ -29,7 +31,6 @@ describe 'Clonk::Client' do
 
   def clear_clients
     default_clients = %w[account admin-cli broker realm-management security-admin-console]
-    Clonk::Client.all.reject { |client| default_clients.include?(client.name) }.map { |client| client.delete }
+    Clonk::Client.all.reject { |client| default_clients.include?(client.name) }.map(&:delete)
   end
 end
-

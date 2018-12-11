@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Clonk
   class Role
     attr_accessor :id
@@ -39,7 +41,6 @@ module Clonk
       all(client: client, target: target, target_type: target_type, realm: realm)
         .select { |role| role.name == name }
     end
-
 
     ##
     # Returns the first role with the given name.

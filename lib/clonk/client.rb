@@ -1,5 +1,6 @@
-module Clonk
+# frozen_string_literal: true
 
+module Clonk
   ##
   # This class represents a client within SSO. A client allows a user to authenticate against SSO with their credentials.
 
@@ -26,18 +27,18 @@ module Clonk
 
     ##
     # Creates a role within this client.
-    # it will be visible in tokens given by this client during authentication, 
+    # it will be visible in tokens given by this client during authentication,
     # as it is already in scope.
 
     def create_role(realm: REALM, name: nil, description: nil, scope_param_required: false)
       # TODO: Create realm roles
       response = Clonk.response(method: :post,
-                      path: "#{url}/roles",
-                      data: {
-                        name: name,
-                        description: description,
-                        scopeParamRequired: scope_param_required
-                      })
+                                path: "#{url}/roles",
+                                data: {
+                                  name: name,
+                                  description: description,
+                                  scopeParamRequired: scope_param_required
+                                })
       Role.find_by(name: name, client: self)
     end
 
@@ -79,6 +80,6 @@ module Clonk
         method: :delete,
         path: url
       )
-    end 
+    end
   end
 end

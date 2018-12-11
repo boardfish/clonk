@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require_relative 'spec_helper'
 
 describe 'Clonk::Realm' do
   it 'requests to the right endpoint' do
     Clonk::Realm.all
-    assert_requested :get, "http://sso:8080/auth/admin/realms"
+    assert_requested :get, 'http://sso:8080/auth/admin/realms'
   end
 
   it 'returns an Array' do

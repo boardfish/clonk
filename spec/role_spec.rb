@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require_relative 'spec_helper'
 
 describe 'Clonk::Role' do
   it 'requests to the right endpoint' do
     client = Clonk::Client.all.first
     Clonk::Role.all(client: client)
-    assert_requested :get, "http://sso:8080/auth/admin/realms/test/clients"
+    assert_requested :get, 'http://sso:8080/auth/admin/realms/test/clients'
   end
 
   it 'returns an Array' do

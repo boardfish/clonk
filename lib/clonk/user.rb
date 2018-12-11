@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Clonk
   class User
     attr_accessor :id

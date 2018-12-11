@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'spec_helper'
 
 describe 'Clonk::User' do
@@ -5,17 +7,16 @@ describe 'Clonk::User' do
     Clonk::User.all.each do |user|
       Clonk.response(
         method: :delete,
-                  path: "#{Clonk.realm_admin_root('test')}/users/#{user.id}"
-                  )
+        path: "#{Clonk.realm_admin_root('test')}/users/#{user.id}"
+      )
     end
-    Clonk.response()
+    Clonk.response
   end
 
   def create_user(username)
     response = Clonk.response(method: :post,
-                  path: "#{Clonk.realm_admin_root('test')}/users",
-                  data: { username: username, enabled: true }
-                  )
+                              path: "#{Clonk.realm_admin_root('test')}/users",
+                              data: { username: username, enabled: true })
     Clonk::User.new_from_id(response.headers[:location].split('/')[-1], 'test')
   end
 
@@ -24,7 +25,7 @@ describe 'Clonk::User' do
   end
 
   it 'sends a request to the users endpoint' do
-    assert_requested :get, "http://sso:8080/auth/admin/realms/test/users"
+    assert_requested :get, 'http://sso:8080/auth/admin/realms/test/users'
   end
 
   it 'returns an Array' do
@@ -49,7 +50,7 @@ describe 'Clonk::User' do
   end
 
   it 'finds only the user with the given ID' do
-    Clonk::User.all.map { |user| user.delete }
+    Clonk::User.all.map(&:delete)
     19.times { create_user(Faker::Overwatch.unique.hero) }
     create_user('jeff')
     expect(Clonk::User.find_by(username: 'jeff')).to be_an_instance_of(Clonk::User)

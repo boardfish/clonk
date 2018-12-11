@@ -2,7 +2,6 @@
 
 module Clonk
   class Group
-
     attr_accessor :id
     attr_reader :name
 
@@ -13,7 +12,7 @@ module Clonk
     end
 
     def subgroups
-      config["subGroups"].map { |group| self.class.new_from_id(group['id'], @realm) }
+      config['subGroups'].map { |group| self.class.new_from_id(group['id'], @realm) }
     end
 
     def add_user(user: nil, realm: REALM)
@@ -43,6 +42,6 @@ module Clonk
         method: :delete,
         path: url
       )
-    end 
+    end
   end
 end
