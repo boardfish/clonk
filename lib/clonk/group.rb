@@ -16,15 +16,6 @@ module Clonk
       config["subGroups"].map { |group| self.class.new_from_id(group['id'], @realm) }
     end
 
-    def map_role(role: nil)
-      client_path = role.container_id == @realm ? 'realm' : "clients/#{role.container_id}"
-      response = Clonk.parsed_response(
-        method: :post,
-        data: [role.config],
-        path: "#{url}/role-mappings/#{client_path}"
-      )
-    end
-
     def add_user(user: nil, realm: REALM)
       Clonk.parsed_response(
         method: :put,

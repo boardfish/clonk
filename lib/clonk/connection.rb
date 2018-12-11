@@ -20,8 +20,19 @@ module Clonk
       objects(type: 'Client')
     end
 
-    def groups
-      objects(type: 'Group')
+    def roles(client:)
+      objects(type: 'Role', root: url_for(client))
+    end
+
+    def groups(user:)
+      return objects(type: 'Group') unless user
+      objects(type: 'Group', path: "/users/#{user.id}/groups")
+    end
+
+    def subgroups(group)
+      subgroups = config(group)['subGroups']
+      return [] if subgroups.nil?
+      subgroups.map { |group| create_instance_of('Group', group)}
     end
 
     def users
@@ -75,6 +86,16 @@ module Clonk
     def config(object)
       parsed_response(path: realm_admin_root + "/#{object.class.name.split('::').last.downcase}s/#{object.id}")
     end
+
+    def map_role(role:, target:)
+      client_path = role.container_id == @realm ? 'realm' : "clients/#{role.container_id}"
+      parsed_response(
+        method: :post,
+        data: [config(role)],
+        path: "#{url_for(target)}/role-mappings/#{client_path}"
+      )
+    end
+
 
     # Connection detail
     ####################
@@ -135,6 +156,11 @@ module Clonk
 
     def realm_admin_root(realm = @realm)
       "#{@base_url}/auth/admin/realms/#{realm&.name}"
+    end
+
+    def url_for(target)
+      class_name = target.class.name.downcase
+      "#{realm_admin_root}/#{class_name}s/#{target.id}"
     end
   end
 end
