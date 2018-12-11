@@ -47,6 +47,10 @@ module Clonk
       objects(type: 'Realm', path: '', root: realm_admin_root(nil))
     end
 
+    def create_realm(**data)
+      create_object(type: 'Realm', path: '', root: realm_admin_root(nil), data: { enabled: true, id: data['realm'] }.merge(data))
+    end
+
     def create_user(**data)
       create_object(type: 'User', data: { enabled: true }.merge(data))
     end
@@ -71,11 +75,11 @@ module Clonk
         path: root + path,
         data: data
       )
+
       create_instance_of(
         type,
         parsed_response(
-          # Child objects are always accessible at the object root level
-          path: root + "/#{type.downcase}s" + "/#{creation_response.headers[:location].split('/')[-1]}"
+          path: creation_response.headers[:location]
         )
       )
     end

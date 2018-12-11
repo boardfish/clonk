@@ -5,7 +5,7 @@ module Clonk
     attr_reader :name
 
     def initialize(realm_response)
-      @name = realm_response['id'] || realm_response['realm']
+      @name = realm_response['realm'] || realm_response['id']
     end
   end
 end
