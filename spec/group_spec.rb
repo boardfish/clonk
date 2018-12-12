@@ -7,7 +7,6 @@ describe 'Clonk::Group' do
   let(:groups) { admin_client.groups }
 
   it 'requests to the right endpoint' do
-    skip 'pending change to helper to point at test realm'
     groups
     assert_requested :get, 'http://sso:8080/auth/admin/realms/test/groups'
   end

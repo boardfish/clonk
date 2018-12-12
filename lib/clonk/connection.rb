@@ -4,18 +4,17 @@ require_relative 'client'
 
 module Clonk
   class Connection
-    # Can be used to init a client against one realm with a token from the master
-    attr_writer :access_token
+    attr_writer :realm
 
-    def initialize(base_url:, realm_id:, username:, password:, client_id:)
+    def initialize(base_url:, realm_id:, username: nil, password: nil, client_id: nil, access_token: nil)
       @base_url = base_url
       @client_id = client_id
-      unless [username, password].all? &:nil?
-        access_token(username: username, password: password, realm_id: realm_id, client_id: client_id)
-        realm_response = parsed_response(path: "/auth/realms/#{realm_id}")
-        @realm = create_instance_of('Realm', realm_response)
+      if [username, password].all? &:nil?
+        @access_token = access_token
+      else
+        initial_access_token(username: username, password: password, realm_id: realm_id, client_id: client_id)
       end
-      @realm ||= create_instance_of('Realm', id: realm_id)
+      @realm = create_instance_of('Realm', parsed_response(path: "/auth/realms/#{realm_id}"))
     end
 
     def clients
@@ -86,7 +85,7 @@ module Clonk
         data: {
           userId: user.id,
           groupId: group.id,
-          realm: @realm
+          realm: @realm.name
         }
       )
     end
@@ -115,7 +114,11 @@ module Clonk
     end
 
     def config(object)
-      parsed_response(path: realm_admin_root + "/#{object.class.name.split('::').last.downcase}s/#{object.id}")
+      class_name = object.class.name.split('::').last.downcase + 's'
+      class_name = 'roles-by-id' if class_name == 'roles'
+      route = realm_admin_root + "/#{class_name}/#{object.id}"
+
+      parsed_response(path: route)
     end
 
     def map_role(role:, target:)
@@ -127,7 +130,7 @@ module Clonk
       )
     end
 
-    def set_password_for(user, password: nil, temporary: false)
+    def set_password_for(user:, password: nil, temporary: false)
       response(
         method: :put,
         data: {
@@ -142,7 +145,7 @@ module Clonk
     # Connection detail
     ####################
 
-    def access_token(username: @username, password: @password, client_id: @client_id, realm_id: @realm.name)
+    def initial_access_token(username: @username, password: @password, client_id: @client_id, realm_id: @realm.name)
       data = {
         username: username,
         password: password,

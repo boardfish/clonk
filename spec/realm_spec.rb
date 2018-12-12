@@ -7,9 +7,8 @@ describe 'Clonk::Realm' do
   let(:realms) { admin_client.realms }
 
   it 'requests to the right endpoint' do
-    skip 'FIXME: not all requests are mocked'
     realms
-    assert_requested :get, 'http://sso:8080/auth/admin/realms'
+    assert_requested :get, 'http://sso:8080/auth/admin/realms/', times: 2 # was requested on admin client init
   end
 
   it 'returns an Array' do

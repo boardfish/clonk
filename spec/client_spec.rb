@@ -7,7 +7,6 @@ describe 'Clonk::Connection' do
   let(:clients) { admin_client.clients }
 
   it 'requests to the right endpoint' do
-    skip 'pending change to helper to point at test realm'
     clients
     assert_requested :get, 'http://sso:8080/auth/admin/realms/test/clients'
   end

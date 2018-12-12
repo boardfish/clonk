@@ -104,11 +104,13 @@ RSpec.configure do |config|
 end
 
 def admin_client
-  Clonk::Connection.new(
+  sso = Clonk::Connection.new(
     base_url: 'http://sso:8080',
     realm_id: 'master',
     username: 'user',
     password: 'password',
     client_id: 'admin-cli'
   )
+  sso.realm = sso.realms.find { |realm| realm.name == 'test' } || sso.create_realm(realm: 'test')
+  sso
 end

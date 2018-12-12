@@ -7,7 +7,6 @@ describe 'Clonk::Role' do
   let(:roles) { admin_client.roles(client: admin_client.clients.first) }
 
   it 'requests to the right endpoint' do
-    skip 'pending change to helper to point at test realm'
     roles
     assert_requested :get, 'http://sso:8080/auth/admin/realms/test/clients'
   end
