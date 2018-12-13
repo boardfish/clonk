@@ -24,8 +24,6 @@ describe 'Clonk::Connection' do
   end
 
   it 'creates another client in SSO' do
-    # skip 'pending addition of delete method'
-    # clear_clients
     list_pre_addition = clients
     new_client = client.create_client(name: Faker::Overwatch.unique.hero)
     list_post_addition = admin_client.clients

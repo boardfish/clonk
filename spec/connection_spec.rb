@@ -26,9 +26,6 @@ describe 'Clonk::Connection' do
       end
 
       it 'returns a User object' do
-        puts "USERS BAR"
-        print client.users
-        puts "----------"
         expect(client.create_user(username: 'bar')).to be_an_instance_of(Clonk::User)
       end
     end

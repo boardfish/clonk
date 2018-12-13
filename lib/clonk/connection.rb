@@ -113,6 +113,13 @@ module Clonk
       Object.const_get('Clonk').const_get(class_name).new(response) || response
     end
 
+    def delete(object)
+      response(
+        path: url_for(object),
+        method: :delete
+      )
+    end
+
     def config(object)
       class_name = object.class.name.split('::').last.downcase + 's'
       class_name = 'roles-by-id' if class_name == 'roles'

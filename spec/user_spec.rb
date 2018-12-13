@@ -25,25 +25,24 @@ describe 'Clonk::User' do
   end
 
   it 'sends a delete request to the right route in SSO' do
-    skip 'pending addition of delete method'
     deleted_user = users.first
-    deleted_user.delete
-    assert_requested :get, "http://sso:8080/auth/admin/realms/test/users/#{deleted_user.id}"
+    client.delete(deleted_user)
+    assert_requested :delete, "http://sso:8080/auth/admin/realms/test/users/#{deleted_user.id}"
   end
 
   it 'deletes the user from SSO' do
-    skip 'pending addition of delete method'
     users_pre_delete = users
     deleted_user = users_pre_delete.first
-    deleted_user.delete
+    client.delete(deleted_user)
     expect(admin_client.users).not_to include(deleted_user)
   end
 
   it 'finds only the user with the given ID' do
-    skip 'pending addition of delete method'
-    users.map(&:delete)
+    users.each do |user|
+      client.delete(user)
+    end
     19.times { admin_client.create_user(username: Faker::Overwatch.unique.hero) }
-    create_user('jeff')
-    expect(Clonk::User.find_by(username: 'jeff')).to be_an_instance_of(Clonk::User)
+    client.create_user(username: 'jeff')
+    expect(client.users.find{ |user| user.username == 'jeff' }).to be_an_instance_of(Clonk::User)
   end
 end

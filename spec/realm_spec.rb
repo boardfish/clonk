@@ -19,9 +19,7 @@ describe 'Clonk::Realm' do
     expect(realms).to all(be_a(Clonk::Realm))
   end
 
-  # Flaky
   it 'creates another realm in SSO' do
-    # skip 'FIXME: 400'
     list_pre_addition = realms
     client.create_realm(realm: Faker::Overwatch.hero)
     list_post_addition = admin_client.realms
