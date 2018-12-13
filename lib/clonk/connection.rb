@@ -25,19 +25,6 @@ module Clonk
       objects(type: 'Role', root: url_for(client))
     end
 
-    def groups(user: nil)
-      return objects(type: 'Group') unless user
-
-      objects(type: 'Group', path: "/users/#{user.id}/groups")
-    end
-
-    def subgroups(group)
-      subgroups = config(group)['subGroups']
-      return [] if subgroups.nil?
-
-      subgroups.map { |group| create_instance_of('Group', group) }
-    end
-
     def users
       objects(type: 'User')
     end
@@ -116,28 +103,6 @@ module Clonk
 
     def create_role(client:, **data)
       create_object(type: 'Role', root: url_for(client), data: data)
-    end
-
-    def create_group(**data)
-      return if data[:name].nil?
-
-      create_object(type: 'Group', data: data)
-    end
-
-    def create_subgroup(group:, **data)
-      create_object(type: 'Group', path: "/groups/#{group.id}/children", data: data)
-    end
-
-    def add_to_group(user:, group:)
-      response(
-        method: :put,
-        path: "#{realm_admin_root}/users/#{user.id}/groups/#{group.id}",
-        data: {
-          userId: user.id,
-          groupId: group.id,
-          realm: @realm.name
-        }
-      )
     end
 
     def create_object(type:, path: "/#{type.downcase}s", root: realm_admin_root, data: {})
