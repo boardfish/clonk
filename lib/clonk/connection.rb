@@ -17,94 +17,6 @@ module Clonk
       @realm = create_instance_of('Realm', parsed_response(path: "/auth/realms/#{realm_id}"))
     end
 
-    def clients
-      objects(type: 'Client')
-    end
-
-    def roles(client:)
-      objects(type: 'Role', root: url_for(client))
-    end
-
-    def users
-      objects(type: 'User')
-    end
-
-    def realms
-      objects(type: 'Realm', path: '', root: realm_admin_root(nil))
-    end
-
-    def create_realm(**data)
-      create_object(type: 'Realm', path: '', root: realm_admin_root(nil), data: { enabled: true, id: data['realm'] }.merge(data))
-    end
-
-    def create_user(**data)
-      create_object(type: 'User', data: { enabled: true }.merge(data))
-    end
-
-    def create_client(**data)
-      create_object(type: 'Client', data: { fullScopeAllowed: false }.merge(data))
-    end
-
-    ##
-    # Maps the given role into the scope of the client. If a user has that role,
-    # it will be visible in tokens given by this client during authentication.
-    # FIXME: Write test!
-
-    def map_scope(client:, role:)
-      response(
-        method: :post,
-        data: [config(role)],
-        path: "#{url_for(client)}/scope-mappings/clients/#{role.container_id}"
-      )
-    end
-
-    ##
-    # Lists the client's permission IDs, if permissions are enabled.
-    # These will be returned as either a boolean (false) if disabled,
-    # or a hash of permission types and IDs.
-    # FIXME: Move to RHSSO so that permissions can actually be used!
-    # FIXME: Write test!
-
-    def permissions(client:)
-      parsed_response(
-        path: "#{url_for(client)}/management/permissions"
-      )['scopePermissions'] || false
-    end
-
-    ##
-    # Enables or disables permissions for some object
-    # FIXME: Write test!
-
-    def set_permissions(object:, enabled: true)
-      parsed_response(
-        method: :put,
-        path: "#{url_for(object)}/management/permissions",
-        data: {
-          enabled: enabled
-        }
-      )
-    end
-
-
-    ##
-    # Returns the client's secret
-    # FIXME: Write test!
-
-    def secret(client:)
-      parsed_response(
-        path: "#{url_for(client)}/client-secret"
-      )['value']
-    end
-
-    ##
-    # Creates a role within the given client.
-    # it will be visible in tokens given by this client during authentication,
-    # as it is already in scope.
-
-    def create_role(client:, **data)
-      create_object(type: 'Role', root: url_for(client), data: data)
-    end
-
     def create_object(type:, path: "/#{type.downcase}s", root: realm_admin_root, data: {})
       creation_response = response(
         method: :post,
@@ -148,18 +60,6 @@ module Clonk
         method: :post,
         data: [config(role)],
         path: "#{url_for(target)}/role-mappings/#{client_path}"
-      )
-    end
-
-    def set_password_for(user:, password: nil, temporary: false)
-      response(
-        method: :put,
-        data: {
-          type: 'password',
-          value: password,
-          temporary: temporary
-        },
-        path: "#{url_for(user)}/reset-password"
       )
     end
 

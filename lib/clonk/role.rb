@@ -12,4 +12,20 @@ module Clonk
       @name = role_response['name']
     end
   end
+
+  class Connection
+
+    def roles(client:)
+      objects(type: 'Role', root: url_for(client))
+    end
+
+    ##
+    # Creates a role within the given client.
+    # it will be visible in tokens given by this client during authentication,
+    # as it is already in scope.
+
+    def create_role(client:, **data)
+      create_object(type: 'Role', root: url_for(client), data: data)
+    end
+  end
 end
