@@ -3,6 +3,8 @@
 require_relative 'client'
 
 module Clonk
+  ##
+  # Defines a connection to SSO.
   class Connection
     attr_writer :realm
 
@@ -17,6 +19,11 @@ module Clonk
       @realm = create_instance_of('Realm', parsed_response(path: "/auth/realms/#{realm_id}"))
     end
 
+    # Methods common to most/all kinds of objects in SSO
+    ####################################################
+
+    ##
+    # Creates an object and returns an instance of it in SSO. Wrapped for each type.
     def create_object(type:, path: "/#{type.downcase}s", root: realm_admin_root, data: {})
       creation_response = response(
         method: :post,
@@ -31,6 +38,8 @@ module Clonk
       )
     end
 
+    ##
+    # Returns all objects in the realm of that type. Wrapped for each type.
     def objects(type:, path: "/#{type.downcase}s", root: realm_admin_root)
       parsed_response(path: root + path).map { |object_response| create_instance_of(type, object_response) }
     end
@@ -46,6 +55,8 @@ module Clonk
       )
     end
 
+    ##
+    # Returns the config in SSO for an object.
     def config(object)
       class_name = object.class.name.split('::').last.downcase + 's'
       class_name = 'roles-by-id' if class_name == 'roles'
@@ -54,6 +65,9 @@ module Clonk
       parsed_response(path: route)
     end
 
+    ##
+    # Map a role to another object.
+    # Common to groups and users
     def map_role(role:, target:)
       client_path = role.container_id == @realm ? 'realm' : "clients/#{role.container_id}"
       parsed_response(
@@ -66,6 +80,8 @@ module Clonk
     # Connection detail
     ####################
 
+    ##
+    # Retrieves an initial access token for the user in the given realm.
     def initial_access_token(username: @username, password: @password, client_id: @client_id, realm_id: @realm.name)
       data = {
         username: username,
@@ -83,7 +99,6 @@ module Clonk
 
     ##
     # Defines a Faraday::Connection object linked to the SSO instance.
-
     def connection(raise_error: true, json: true, token: @access_token)
       Faraday.new(url: @base_url) do |faraday|
         faraday.request(json ? :json : :url_encoded)
@@ -95,8 +110,6 @@ module Clonk
 
     ##
     # Returns a Faraday::Response for an API call via the given method.
-    # Always uses an admin token.
-
     def response(method: :get, path: '/', data: nil, connection_params: {})
       return unless %i[get post put delete].include?(method)
 
@@ -107,8 +120,6 @@ module Clonk
     # Returns a parsed JSON response for an API call via the given method.
     # Useful in instances where only the data is necessary, and not
     # HTTP status confirmation that the desired effect was caused.
-    # Always uses an admin token.
-
     def parsed_response(method: :get, path: '/', data: nil, connection_params: {})
       resp = response(method: method, path: path, data: data, connection_params: connection_params)
 
@@ -119,14 +130,16 @@ module Clonk
 
     ##
     # Returns the admin API root for the realm.
-
     def realm_admin_root(realm = @realm)
       "#{@base_url}/auth/admin/realms/#{realm&.name}"
     end
 
+    ##
+    # Returns the URL for the given object.
+    # FIXME: Does not work with realms - realm_admin_root does, though.
     def url_for(target)
-      class_name = target.class.name.downcase
-      "#{realm_admin_root}/#{target.class.name.split('::').last.downcase}s/#{target.id}"
+      class_name = target.class.name.split('::').last.downcase
+      "#{realm_admin_root}/#{class_name}s/#{target.id}"
     end
   end
 end

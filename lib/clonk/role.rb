@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module Clonk
+  # Represents a role within SSO.
   class Role
     attr_accessor :id
     attr_accessor :container_id
@@ -13,6 +14,7 @@ module Clonk
     end
   end
 
+  # Defines a connection to SSO.
   class Connection
     def roles(client:)
       objects(type: 'Role', root: url_for(client))
