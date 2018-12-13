@@ -63,7 +63,6 @@ module Clonk
       )
     end
 
-
     ##
     # Returns the client's secret
     # FIXME: Write test!
@@ -73,6 +72,5 @@ module Clonk
         path: "#{url_for(client)}/client-secret"
       )['value']
     end
-
   end
 end

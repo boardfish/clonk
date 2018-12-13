@@ -7,7 +7,6 @@ module Clonk
     def initialize(realm_response)
       @name = realm_response['realm'] || realm_response['id']
     end
-
   end
 
   class Connection

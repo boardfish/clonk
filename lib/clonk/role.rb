@@ -14,7 +14,6 @@ module Clonk
   end
 
   class Connection
-
     def roles(client:)
       objects(type: 'Role', root: url_for(client))
     end

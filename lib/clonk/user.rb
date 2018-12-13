@@ -14,7 +14,6 @@ module Clonk
   end
 
   class Connection
-
     def users
       objects(type: 'User')
     end
@@ -34,6 +33,5 @@ module Clonk
         path: "#{url_for(user)}/reset-password"
       )
     end
-
   end
 end
