@@ -20,21 +20,17 @@ describe 'Clonk::Group' do
   end
 
   it 'creates another group in SSO' do
-    skip 'pending addition of delete method'
-    groups.each(&:delete)
     list_pre_addition = admin_client.groups
-    new_group = admin_client.create_group(name: Faker::Overwatch.unique.hero)
+    admin_client.create_group(name: Faker::Overwatch.unique.hero)
     list_post_addition = admin_client.groups
     expect(list_post_addition.count - list_pre_addition.count).to eq(1)
   end
 
   it 'creates a subgroup in SSO' do
-    skip 'pending addition of delete method'
-    groups.each(&:delete)
     new_group = admin_client.create_group(name: Faker::Overwatch.unique.hero)
-    config_pre_addition = new_group.config
+    config_pre_addition = admin_client.config(new_group)
     admin_client.create_subgroup(group: new_group, name: Faker::Overwatch.unique.hero)
-    config_post_addition = new_group.config
+    config_post_addition = admin_client.config(new_group)
     expect(config_post_addition['subGroups'].count - config_pre_addition['subGroups'].count).to eq(1)
   end
 end

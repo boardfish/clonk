@@ -3,11 +3,11 @@
 require_relative 'spec_helper'
 
 describe 'Clonk::Connection' do
-  let(:client) { Clonk::Connection.new(base_url: 'http://sso:8080', realm_id: 'master', username: 'user', password: 'password', client_id: 'admin-cli') }
+  let(:client) { admin_client }
   context 'users' do
     it 'sends a request to the users endpoint' do
       client.users
-      assert_requested :get, 'http://sso:8080/auth/admin/realms/master/users'
+      assert_requested :get, 'http://sso:8080/auth/admin/realms/test/users'
     end
 
     it 'returns an Array' do
@@ -26,6 +26,9 @@ describe 'Clonk::Connection' do
       end
 
       it 'returns a User object' do
+        puts "USERS BAR"
+        print client.users
+        puts "----------"
         expect(client.create_user(username: 'bar')).to be_an_instance_of(Clonk::User)
       end
     end
@@ -34,7 +37,7 @@ describe 'Clonk::Connection' do
   context 'clients' do
     it 'sends a request to the clients endpoint' do
       client.clients
-      assert_requested :get, 'http://sso:8080/auth/admin/realms/master/clients'
+      assert_requested :get, 'http://sso:8080/auth/admin/realms/test/clients'
     end
 
     it 'returns an Array' do
@@ -61,7 +64,7 @@ describe 'Clonk::Connection' do
   context 'groups' do
     it 'sends a request to the clients endpoint' do
       client.groups
-      assert_requested :get, 'http://sso:8080/auth/admin/realms/master/groups'
+      assert_requested :get, 'http://sso:8080/auth/admin/realms/test/groups'
     end
 
     it 'returns an Array' do

@@ -21,9 +21,9 @@ describe 'Clonk::Realm' do
 
   # Flaky
   it 'creates another realm in SSO' do
-    skip 'FIXME: 400'
+    # skip 'FIXME: 400'
     list_pre_addition = realms
-    client.create_realm(name: Faker::Overwatch.hero)
+    client.create_realm(realm: Faker::Overwatch.hero)
     list_post_addition = admin_client.realms
     expect(list_post_addition.count - list_pre_addition.count).to eq(1)
   end

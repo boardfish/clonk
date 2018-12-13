@@ -11,7 +11,7 @@ describe 'Clonk::User' do
   end
 
   it 'sends a request to the users endpoint' do
-    skip 'pending setup of client to point at test realm'
+    # skip 'pending setup of client to point at test realm'
     users
     assert_requested :get, 'http://sso:8080/auth/admin/realms/test/users'
   end
@@ -41,7 +41,6 @@ describe 'Clonk::User' do
 
   it 'finds only the user with the given ID' do
     skip 'pending addition of delete method'
-    skip 'pending addition of find_by'
     users.map(&:delete)
     19.times { admin_client.create_user(username: Faker::Overwatch.unique.hero) }
     create_user('jeff')
