@@ -15,18 +15,6 @@ module Clonk
       config['subGroups'].map { |group| self.class.new_from_id(group['id'], @realm) }
     end
 
-    def add_user(user: nil, realm: REALM)
-      Clonk.parsed_response(
-        method: :put,
-        path: "#{user.url}/groups/#{@id}",
-        data: {
-          groupId: @id,
-          userId: user.id,
-          realm: @realm
-        }
-      )
-    end
-
     def set_permissions(enabled: true)
       Clonk.parsed_response(
         method: :put,
@@ -34,13 +22,6 @@ module Clonk
         data: {
           enabled: enabled
         }
-      )
-    end
-
-    def delete
-      Clonk.response(
-        method: :delete,
-        path: url
       )
     end
   end

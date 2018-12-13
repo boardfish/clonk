@@ -58,7 +58,6 @@ module Clonk
       create_object(type: 'Client', data: { fullScopeAllowed: false }.merge(data))
     end
 
-
     ##
     # Creates a role within the given client.
     # it will be visible in tokens given by this client during authentication,

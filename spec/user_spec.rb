@@ -43,6 +43,6 @@ describe 'Clonk::User' do
     end
     19.times { admin_client.create_user(username: Faker::Overwatch.unique.hero) }
     client.create_user(username: 'jeff')
-    expect(client.users.find{ |user| user.username == 'jeff' }).to be_an_instance_of(Clonk::User)
+    expect(client.users.find { |user| user.username == 'jeff' }).to be_an_instance_of(Clonk::User)
   end
 end

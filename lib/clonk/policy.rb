@@ -13,6 +13,7 @@ module Clonk
 
     ##
     # Gets config inside SSO for policy with ID in realm.
+    # FIXME: move to connection class
 
     def self.get_config(id, realm = REALM)
       Clonk.parsed_response(
@@ -21,14 +22,8 @@ module Clonk
     end
 
     ##
-    # Gets config inside SSO for policy.
-
-    def config
-      self.class.get_config(@id, @realm)
-    end
-
-    ##
     # Creates a new Policy instance from a policy that exists in SSO
+    # FIXME: move to connection class
 
     def self.new_from_id(id, realm = REALM)
       new(get_config(id, realm), realm)
@@ -38,6 +33,7 @@ module Clonk
     # Returns defaults for a policy.
     # I've found no reason to override these, but then again, I'm not 100% sure
     # how they work. Overrides will be added to necessary methods if requested.
+    # FIXME: move to connection class
 
     def self.defaults
       {
@@ -52,6 +48,7 @@ module Clonk
     #--
     # TODO: Expand to allow for other policy types
     # TODO: Don't assume role as default type
+    # FIXME: move to connection class
     #++
 
     def self.define(type: :role, name: nil, objects: [], description: nil, groups_claim: nil)
@@ -68,6 +65,7 @@ module Clonk
 
     ##
     # Defines and creates a policy in SSO.
+    # FIXME: move to connection class
 
     def self.create(type: :role, name: nil, objects: [], description: nil, groups_claim: nil, realm: REALM)
       data = define(type: type, name: name, objects: objects, description: description, groups_claim: groups_claim)

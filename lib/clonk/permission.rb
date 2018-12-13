@@ -12,6 +12,7 @@ module Clonk
     # Argument is necessary as permissions are sometimes treated as policies
     # within SSO for some reason, especially when fetching scopes, resources and
     # policies.
+    # FIXME: move to connection class
 
     def url(prefix: 'permission/scope')
       client_url = Clonk::Client.find_by(realm: @realm, name: 'realm-management').url
@@ -19,27 +20,8 @@ module Clonk
     end
 
     ##
-    # Creates a new Permission instance from a given permission ID and realm.
-
-    def self.new_from_id(id: nil, realm: REALM)
-      client_url = Clonk::Client.find_by(realm: realm, name: 'realm-management').url
-      response = Clonk.parsed_response(
-        path: "#{client_url}/authz/resource-server/permission/scope/#{id}"
-      )
-      new(response, realm)
-    end
-
-    ##
-    # Returns the config within SSO for this permission.
-
-    def config
-      Clonk.parsed_response(
-        path: url.to_s
-      )
-    end
-
-    ##
     # Returns the policy IDs associated with this permission.
+    # FIXME: move to connection class
 
     def policies
       Clonk.parsed_response(
@@ -49,6 +31,7 @@ module Clonk
 
     ##
     # Returns the resource IDs associated with this permission.
+    # FIXME: move to connection class
 
     def resources
       Clonk.parsed_response(
@@ -58,6 +41,7 @@ module Clonk
 
     ##
     # Returns the scope IDs associated with this permission.
+    # FIXME: move to connection class
 
     def scopes
       Clonk.parsed_response(
@@ -67,6 +51,7 @@ module Clonk
 
     ##
     # Adds the given policy/resource/scope IDs to this permission in SSO.
+    # FIXME: move to connection class
 
     def update(policies: [], resources: [], scopes: [])
       data = config.merge(
