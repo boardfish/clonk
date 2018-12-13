@@ -28,9 +28,13 @@ describe 'Clonk::Group' do
 
   it 'creates a subgroup in SSO' do
     new_group = admin_client.create_group(name: Faker::Overwatch.unique.hero)
-    config_pre_addition = admin_client.config(new_group)
-    admin_client.create_subgroup(group: new_group, name: Faker::Overwatch.unique.hero)
-    config_post_addition = admin_client.config(new_group)
-    expect(config_post_addition['subGroups'].count - config_pre_addition['subGroups'].count).to eq(1)
+    conf_pre_addition = admin_client.config(new_group)
+    admin_client.create_subgroup(
+      group: new_group, name: Faker::Overwatch.unique.hero
+    )
+    conf_post_addition = admin_client.config(new_group)
+    expect(
+      conf_post_addition['subGroups'].size - conf_pre_addition['subGroups'].size
+    ).to eq(1)
   end
 end

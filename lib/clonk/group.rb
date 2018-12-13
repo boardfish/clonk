@@ -13,6 +13,7 @@ module Clonk
     end
   end
 
+  # Defines a connection to SSO.
   class Connection
     # Lists groups in the realm.
     def groups(user: nil)
@@ -26,7 +27,7 @@ module Clonk
       subgroups = config(group)['subGroups']
       return [] if subgroups.nil?
 
-      subgroups.map { |group| create_instance_of('Group', group) }
+      subgroups.map { |subgroup| create_instance_of('Group', subgroup) }
     end
 
     # Creates a group in SSO and returns its representation as a Clonk::Group.
@@ -36,7 +37,8 @@ module Clonk
       create_object(type: 'Group', data: data)
     end
 
-    # Creates a subgroup in SSO and returns its representation as a Clonk::Group.
+    # Creates a subgroup in SSO and returns its representation as a
+    # Clonk::Group.
     def create_subgroup(group:, **data)
       create_object(
         type: 'Group', path: "/groups/#{group.id}/children", data: data

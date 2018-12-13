@@ -14,13 +14,17 @@ module Clonk
     end
   end
 
+  # Defines a connection to SSO.
   class Connection
     def clients
       objects(type: 'Client')
     end
 
     def create_client(**data)
-      create_object(type: 'Client', data: { fullScopeAllowed: false }.merge(data))
+      create_object(
+        type: 'Client',
+        data: { fullScopeAllowed: false }.merge(data)
+      )
     end
 
     ##

@@ -8,27 +8,29 @@ module Clonk
   class Connection
     attr_writer :realm
 
-    def initialize(base_url:, realm_id:, username: nil, password: nil, client_id: nil, access_token: nil)
+    def initialize(base_url:, realm_id:, username:, password:, client_id: nil)
       @base_url = base_url
       @client_id = client_id
-      if [username, password].all? &:nil?
-        @access_token = access_token
-      else
-        initial_access_token(username: username, password: password, realm_id: realm_id, client_id: client_id)
-      end
-      @realm = create_instance_of('Realm', parsed_response(path: "/auth/realms/#{realm_id}"))
+      initial_access_token(
+        username: username, password: password, realm_id: realm_id,
+        client_id: client_id
+      )
+      @realm = create_instance_of(
+        'Realm', parsed_response(path: "/auth/realms/#{realm_id}")
+      )
     end
 
     # Methods common to most/all kinds of objects in SSO
     ####################################################
 
     ##
-    # Creates an object and returns an instance of it in SSO. Wrapped for each type.
-    def create_object(type:, path: "/#{type.downcase}s", root: realm_admin_root, data: {})
+    # Creates an object and returns an instance of it in SSO. Wrapped for each
+    # type.
+    def create_object(
+      type:, path: "/#{type.downcase}s", root: realm_admin_root, data: {}
+    )
       creation_response = response(
-        method: :post,
-        path: root + path,
-        data: data
+        method: :post, path: root + path, data: data
       )
       create_instance_of(
         type,
@@ -41,7 +43,9 @@ module Clonk
     ##
     # Returns all objects in the realm of that type. Wrapped for each type.
     def objects(type:, path: "/#{type.downcase}s", root: realm_admin_root)
-      parsed_response(path: root + path).map { |object_response| create_instance_of(type, object_response) }
+      parsed_response(path: root + path).map do |object_response|
+        create_instance_of(type, object_response)
+      end
     end
 
     def create_instance_of(class_name, response)
@@ -49,10 +53,7 @@ module Clonk
     end
 
     def delete(object)
-      response(
-        path: url_for(object),
-        method: :delete
-      )
+      response(path: url_for(object), method: :delete)
     end
 
     ##
@@ -61,7 +62,6 @@ module Clonk
       class_name = object.class.name.split('::').last.downcase + 's'
       class_name = 'roles-by-id' if class_name == 'roles'
       route = realm_admin_root + "/#{class_name}/#{object.id}"
-
       parsed_response(path: route)
     end
 
@@ -69,10 +69,14 @@ module Clonk
     # Map a role to another object.
     # Common to groups and users
     def map_role(role:, target:)
-      client_path = role.container_id == @realm ? 'realm' : "clients/#{role.container_id}"
+      client_path = case role.container_id
+                    when @realm
+                      'realm'
+                    else
+                      "clients/#{role.container_id}"
+                    end
       parsed_response(
-        method: :post,
-        data: [config(role)],
+        method: :post, data: [config(role)],
         path: "#{url_for(target)}/role-mappings/#{client_path}"
       )
     end
@@ -82,18 +86,18 @@ module Clonk
 
     ##
     # Retrieves an initial access token for the user in the given realm.
-    def initial_access_token(username: @username, password: @password, client_id: @client_id, realm_id: @realm.name)
-      data = {
-        username: username,
-        password: password,
-        grant_type: 'password',
-        client_id: client_id
-      }
+    def initial_access_token(
+      username: @username, password: @password, client_id: @client_id,
+      realm_id: @realm.name
+    )
       @access_token = parsed_response(
         method: :post,
         path: "/auth/realms/#{realm_id}/protocol/openid-connect/token",
         connection_params: { json: false, raise_error: true },
-        data: data
+        data: {
+          username: username, password: password, grant_type: 'password',
+          client_id: client_id
+        }
       )['access_token']
     end
 
@@ -120,8 +124,13 @@ module Clonk
     # Returns a parsed JSON response for an API call via the given method.
     # Useful in instances where only the data is necessary, and not
     # HTTP status confirmation that the desired effect was caused.
-    def parsed_response(method: :get, path: '/', data: nil, connection_params: {})
-      resp = response(method: method, path: path, data: data, connection_params: connection_params)
+    def parsed_response(
+      method: :get, path: '/', data: nil, connection_params: {}
+    )
+      resp = response(
+        method: method, path: path, data: data,
+        connection_params: connection_params
+      )
 
       JSON.parse(resp.body)
     rescue JSON::ParserError
@@ -136,7 +145,7 @@ module Clonk
 
     ##
     # Returns the URL for the given object.
-    # FIXME: Does not work with realms - realm_admin_root does, though.
+    # FIXME: Does not work with realms - realm_admin_root does, though.
     def url_for(target)
       class_name = target.class.name.split('::').last.downcase
       "#{realm_admin_root}/#{class_name}s/#{target.id}"

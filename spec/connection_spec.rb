@@ -26,7 +26,8 @@ describe 'Clonk::Connection' do
       end
 
       it 'returns a User object' do
-        expect(client.create_user(username: 'bar')).to be_an_instance_of(Clonk::User)
+        expect(client.create_user(username: 'bar'))
+          .to be_an_instance_of(Clonk::User)
       end
     end
   end
@@ -53,7 +54,8 @@ describe 'Clonk::Connection' do
       end
 
       it 'returns a Client object' do
-        expect(client.create_client(clientId: 'bar')).to be_an_instance_of(Clonk::Client)
+        expect(client.create_client(clientId: 'bar'))
+          .to be_an_instance_of(Clonk::Client)
       end
     end
   end
@@ -80,7 +82,8 @@ describe 'Clonk::Connection' do
       end
 
       it 'returns a Group object' do
-        expect(client.create_group(name: 'bar')).to be_an_instance_of(Clonk::Group)
+        expect(client.create_group(name: 'bar'))
+          .to be_an_instance_of(Clonk::Group)
       end
     end
   end

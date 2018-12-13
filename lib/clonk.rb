@@ -6,11 +6,12 @@ require 'faraday_middleware'
 require 'json'
 # require 'pp'
 
-BASE_URL = URI.encode(ENV.fetch('SSO_BASE_URL'))
+BASE_URL = CGI.escape(ENV.fetch('SSO_BASE_URL'))
 USERNAME = ENV.fetch('SSO_USERNAME')
 PASSWORD = ENV.fetch('SSO_PASSWORD')
 REALM = ENV.fetch('SSO_REALM')
 
+# Keycloak/Red Hat SSO API wrapper
 module Clonk
   class << self
     ##
