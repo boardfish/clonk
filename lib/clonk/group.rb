@@ -11,18 +11,9 @@ module Clonk
       @realm = realm
     end
 
+    # FIXME: move to connection model
     def subgroups
       config['subGroups'].map { |group| self.class.new_from_id(group['id'], @realm) }
-    end
-
-    def set_permissions(enabled: true)
-      Clonk.parsed_response(
-        method: :put,
-        path: "#{url}/management/permissions",
-        data: {
-          enabled: enabled
-        }
-      )
     end
   end
 end

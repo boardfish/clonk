@@ -85,13 +85,13 @@ module Clonk
     end
 
     ##
-    # Enables or disables permissions for a client
+    # Enables or disables permissions for some object
     # FIXME: Write test!
 
-    def set_permissions(client:, enabled: true)
+    def set_permissions(object:, enabled: true)
       parsed_response(
         method: :put,
-        path: "#{url_for(client)}/management/permissions",
+        path: "#{url_for(object)}/management/permissions",
         data: {
           enabled: enabled
         }
@@ -146,7 +146,6 @@ module Clonk
         path: root + path,
         data: data
       )
-
       create_instance_of(
         type,
         parsed_response(
