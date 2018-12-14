@@ -15,10 +15,9 @@ services:
     image: registry.access.redhat.com/redhat-sso-7/sso72-openshift
     env_file:
       - '.sso_credentials.env'
-    volumes:
-      - ./profile.properties:/opt/eap/standalone/configuration/profile.properties
     ports:
       - "8080:8080"
     environment:
       - SSO_ADMIN_USERNAME=user
       - SSO_ADMIN_PASSWORD=password
+      - JAVA_OPTS_APPEND=-Dkeycloak.profile=preview
