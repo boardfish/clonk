@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module Clonk
+  # Represents a policy in SSO.
+  # FIXME: Has not been fully updated from v1's use of the API.
   class Policy
     attr_accessor :id
     attr_reader :name
@@ -17,7 +19,9 @@ module Clonk
 
     def self.get_config(id, realm = REALM)
       Clonk.parsed_response(
-        path: "#{Clonk.realm_admin_root(realm)}/clients/#{Clonk::Client.find_by(name: 'realm-management').id}/authz/resource-server/policy/role/#{id}"
+        path: "#{Clonk.realm_admin_root(realm)}/clients/#{Clonk::Client.find_by(
+          name: 'realm-management'
+        ).id}/authz/resource-server/policy/role/#{id}"
       )
     end
 
@@ -67,7 +71,9 @@ module Clonk
     # Defines and creates a policy in SSO.
     # FIXME: move to connection class
 
-    def self.create(type: :role, name: nil, objects: [], description: nil, groups_claim: nil, realm: REALM)
+    def self.create(
+      type: :role, name: nil, objects: [], description: nil, groups_claim: nil, realm: REALM
+    )
       data = define(type: type, name: name, objects: objects, description: description, groups_claim: groups_claim)
       realm_management_url = Clonk::Client.find_by(name: 'realm-management', realm: realm).url
       Clonk.parsed_response(

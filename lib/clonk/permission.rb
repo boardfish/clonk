@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module Clonk
+  # Represents a permission in SSO. Methods on Clonk::Connection can be used to
+  # index its policies, resources and associated scopes
   class Permission
     def initialize(permission_response, realm)
       @id = permission_response['id']
@@ -13,6 +15,7 @@ module Clonk
     def permissions
       clients.find { |client| client.name == 'realm-management' }
     end
+
     ##
     # Returns the policy IDs associated with a permission.
     # FIXME: untested!
