@@ -2,7 +2,7 @@
 
 This is a gem that'll help you seed an instance of Red Hat SSO or Keycloak.
 
-You should initialize the following environment variables. They aren't used by Clonk, but your Red Hat SSO instance will need them to create an admin user,
+You should initialize the following environment variables. They aren't used by Clonk, but your Red Hat SSO instance will need them to create an admin user.
 
 ```
 SSO_ADMIN_USERNAME
@@ -88,3 +88,40 @@ I seeded SSO with more `curl` requests than you could shake a stick at. Suffice 
 ### ...to transfer what I've learned
 
 This gem goes hand-in-hand with a blog post I'm writing, but I'm hoping it'll go further than just that tutorial. Fingers crossed this gem will have its tendrils deep in a lot of SSO instances out there...which sounds a little ominous, but...yeah, you get the gist!
+
+## Development
+
+I've built a containerised environment for this.
+
+To bring up your SSO instance on port 8080: `docker-compose up -d sso`
+
+To run the seed script: `docker-compose run --rm seeder ruby seed_script.rb`
+
+To run the test suite: `docker-compose run --rm seeder rspec`
+
+To run a development console: `gem build clonk.gemspec; docker-compose build seeder; docker-compose run --rm seeder rspec`
+
+Once you're in the dev console, `require 'clonk'` and you can get started playing with methods. Note that the version of `clonk` that is used is defined in the `Dockerfile.`
+
+The structure of the project is as follows:
+
+- Methods that don't require authentication in SSO should be in the top-level module. This is due to change, as `Clonk::Connection` objects will be able to be initialised without credentials.
+- Each file under `lib/clonk` defines a class representation of an object in SSO, and methods on a `Connection` object to be able to interface with it.
+
+## FAQ/Common Issues
+
+### Error 400
+
+Bad request – you may be sending bad parameters.
+
+### Error 401
+
+This means your token has expired or you're providing the wrong credentials. You'll need to reinitialise your `Clonk::Connection` object to retrieve a new one.
+
+### Error 403
+
+The user you have authenticated as does not have permission to access the current object.
+
+### Error 404
+
+The object you're looking for wasn't found and may not exist in SSO.
