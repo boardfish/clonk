@@ -6,61 +6,53 @@ module Clonk
       @id = permission_response['id']
       @realm = realm
     end
+  end
 
-    ##
-    # Returns the API URL for this permission.
-    # Argument is necessary as permissions are sometimes treated as policies
-    # within SSO for some reason, especially when fetching scopes, resources and
-    # policies.
-    # FIXME: move to connection class
-
-    def url(prefix: 'permission/scope')
-      client_url = Clonk::Client.find_by(realm: @realm, name: 'realm-management').url
-      "#{client_url}/authz/resource-server/#{prefix}/#{@id}"
+  # Defines a connection to SSO.
+  class Connection
+    def permissions
+      clients.find { |client| client.name == 'realm-management' }
     end
-
     ##
-    # Returns the policy IDs associated with this permission.
-    # FIXME: move to connection class
-
-    def policies
-      Clonk.parsed_response(
-        path: "#{url(prefix: 'policy')}/associatedPolicies"
-      ).map { |policy| policy['id'] }
+    # Returns the policy IDs associated with a permission.
+    # FIXME: untested!
+    def policies(permission)
+      parsed_response(
+        path: "#{url_for(permission, prefix: 'policy')}/associatedPolicies"
+      )
     end
 
     ##
     # Returns the resource IDs associated with this permission.
-    # FIXME: move to connection class
-
-    def resources
-      Clonk.parsed_response(
-        path: "#{url(prefix: 'policy')}/resources"
-      ).map { |resource| resource['_id'] }
+    # FIXME: untested!
+    def resources(permission)
+      parsed_response(
+        path: "#{url_for(permission, prefix: 'policy')}/resources"
+      )
     end
 
     ##
     # Returns the scope IDs associated with this permission.
-    # FIXME: move to connection class
-
-    def scopes
-      Clonk.parsed_response(
-        path: "#{url(prefix: 'policy')}/scopes"
-      ).map { |scope| scope['id'] }
+    # FIXME: untested
+    def scopes(permission)
+      parsed_response(
+        path: "#{url_for(permission, prefix: 'policy')}/scopes"
+      )
     end
 
     ##
     # Adds the given policy/resource/scope IDs to this permission in SSO.
-    # FIXME: move to connection class
-
-    def update(policies: [], resources: [], scopes: [])
-      data = config.merge(
-        policies: self.policies + policies,
-        resources: self.resources + resources,
-        scopes: self.scopes + scopes
+    # FIXME: untested
+    def update_permission(
+      permission:, policies: [], resources: [], scopes: []
+    )
+      data = config(permission).merge(
+        policies: policies(permission) + policies,
+        resources: resources(permission) + resources,
+        scopes: scopes(permission) + scopes
       )
-      Clonk.parsed_response(
-        path: url,
+      parsed_response(
+        path: url_for(permission),
         data: data,
         method: :put
       )

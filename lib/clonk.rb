@@ -2,14 +2,9 @@
 
 require 'faraday'
 require 'faraday_middleware'
-# require 'dotenv/load'
 require 'json'
-# require 'pp'
 
 BASE_URL = CGI.escape(ENV.fetch('SSO_BASE_URL'))
-USERNAME = ENV.fetch('SSO_USERNAME')
-PASSWORD = ENV.fetch('SSO_PASSWORD')
-REALM = ENV.fetch('SSO_REALM')
 
 # Keycloak/Red Hat SSO API wrapper
 module Clonk
@@ -24,13 +19,6 @@ module Clonk
         faraday.adapter Faraday.default_adapter
         faraday.headers['Authorization'] = "Bearer #{token}" if token
       end
-    end
-
-    ##
-    # Returns the admin API root for the realm.
-
-    def realm_admin_root(realm)
-      "/auth/admin/realms/#{realm}"
     end
   end
 end

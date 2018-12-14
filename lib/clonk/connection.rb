@@ -145,10 +145,21 @@ module Clonk
 
     ##
     # Returns the URL for the given object.
+    # Argument is necessary as permissions are sometimes treated as policies
+    # within SSO for some reason, especially when fetching scopes, resources and
+    # policies.
     # FIXME: Does not work with realms - realm_admin_root does, though.
-    def url_for(target)
+    def url_for(target, prefix: 'permision/scope')
       class_name = target.class.name.split('::').last.downcase
+      url_for_permission(target, prefix: prefix) if class_name == 'permission'
       "#{realm_admin_root}/#{class_name}s/#{target.id}"
+    end
+
+    def url_for_permission(permission, prefix: 'permission/scope')
+      client_url = url_for(
+        clients.find { |client| client.name == 'realm-management' }
+      )
+      "#{client_url}/authz/resource-server/#{prefix}/#{permission.id}"
     end
   end
 end
