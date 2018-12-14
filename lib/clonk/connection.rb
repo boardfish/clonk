@@ -58,6 +58,9 @@ module Clonk
 
     ##
     # Returns the config in SSO for an object.
+    #--
+    # FIXME: Does not work for policies or permissions
+    #++
     def config(object)
       class_name = object.class.name.split('::').last.downcase + 's'
       class_name = 'roles-by-id' if class_name == 'roles'

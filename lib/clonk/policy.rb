@@ -14,36 +14,30 @@ module Clonk
     end
 
     ##
-    # Gets config inside SSO for policy with ID in realm.
-    # FIXME: move to connection class
-
-    def self.get_config(id, realm = REALM)
-      Clonk.parsed_response(
-        path: "#{Clonk.realm_admin_root(realm)}/clients/#{Clonk::Client.find_by(
-          name: 'realm-management'
-        ).id}/authz/resource-server/policy/role/#{id}"
-      )
-    end
-
-    ##
-    # Creates a new Policy instance from a policy that exists in SSO
-    # FIXME: move to connection class
-
-    def self.new_from_id(id, realm = REALM)
-      new(get_config(id, realm), realm)
-    end
-
-    ##
     # Returns defaults for a policy.
     # I've found no reason to override these, but then again, I'm not 100% sure
     # how they work. Overrides will be added to necessary methods if requested.
-    # FIXME: move to connection class
-
     def self.defaults
       {
         logic: 'POSITIVE',
         decisionStrategy: 'UNANIMOUS'
       }
+    end
+  end
+
+  class Connection
+    ##
+    # Gets config inside SSO for policy with ID in realm.
+    #--
+    # FIXME: bring in line with existing config method
+    #++
+
+    def get_policy_config(id)
+      parsed_response(
+        path: "#{realm_admin_root(realm)}/clients/#{clients.find { |client|
+          client.name == 'realm-management'
+        }.id}/authz/resource-server/policy/role/#{id}"
+      )
     end
 
     ##
@@ -52,15 +46,26 @@ module Clonk
     #--
     # TODO: Expand to allow for other policy types
     # TODO: Don't assume role as default type
-    # FIXME: move to connection class
+    # FIXME: give objects a type method, split this into two functions
     #++
 
-    def self.define(type: :role, name: nil, objects: [], description: nil, groups_claim: nil)
-      defaults.merge(
+    def define_policy(type: :role, name: nil, objects: [], description: nil, groups_claim: nil)
+      objects = if type == :role
+                  {
+                    roles: objects.map do |role|
+                      { id: role.id, required: true }
+                    end
+                  }
+                elsif type == :group
+                  {
+                    groups: objects.map do |group|
+                              { id: group.id, extendChildren: false }
+                            end
+                  }
+                end
+      defaults.merge(objects).merge(
         type: type,
         name: name,
-        roles: (objects.map { |role| { id: role.id, required: true } } if type == :role),
-        groups: (objects.map { |group| { id: group.id, extendChildren: false } } if type == :group),
         groupsClaim: (groups_claim if type == :group),
         clients: (objects.map(&:id) if type == :client),
         description: description
@@ -68,17 +73,14 @@ module Clonk
     end
 
     ##
-    # Defines and creates a policy in SSO.
+    # Creates a policy in SSO. You should do this after defining a policy with define_policy.
     # FIXME: move to connection class
 
-    def self.create(
-      type: :role, name: nil, objects: [], description: nil, groups_claim: nil, realm: REALM
-    )
-      data = define(type: type, name: name, objects: objects, description: description, groups_claim: groups_claim)
-      realm_management_url = Clonk::Client.find_by(name: 'realm-management', realm: realm).url
-      Clonk.parsed_response(
+    def self.create(data)
+      realm_management_url = url_for(clients.find { |c| c.name == 'realm-management' })
+      parsed_response(
         method: :post,
-        path: "#{realm_management_url}/authz/resource-server/policy/#{type}",
+        path: "#{realm_management_url}/authz/resource-server/policy/#{data['type']}",
         data: data
       )
     end
