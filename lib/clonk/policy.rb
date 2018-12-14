@@ -7,10 +7,9 @@ module Clonk
     attr_accessor :id
     attr_reader :name
 
-    def initialize(policy_response, realm)
+    def initialize(policy_response)
       @id = policy_response['id']
       @name = policy_response['name']
-      @realm = realm
     end
 
     ##
@@ -26,6 +25,13 @@ module Clonk
   end
 
   class Connection
+    def policies
+      realm_management = clients.find { |client| client.name == 'realm-management' }
+      objects(type: 'Policy',
+        path: "/clients/#{realm_management.id}/authz/resource-server/policy"
+      )
+    end
+
     ##
     # Gets config inside SSO for policy with ID in realm.
     #--

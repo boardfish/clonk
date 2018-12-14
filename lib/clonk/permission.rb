@@ -22,7 +22,7 @@ module Clonk
     ##
     # Returns the policy IDs associated with a permission.
     # FIXME: untested!
-    def policies(permission)
+    def policies_for(permission)
       parsed_response(
         path: "#{url_for(permission, prefix: 'policy')}/associatedPolicies"
       )
@@ -31,7 +31,7 @@ module Clonk
     ##
     # Returns the resource IDs associated with this permission.
     # FIXME: untested!
-    def resources(permission)
+    def resources_for(permission)
       parsed_response(
         path: "#{url_for(permission, prefix: 'policy')}/resources"
       )
@@ -40,7 +40,7 @@ module Clonk
     ##
     # Returns the scope IDs associated with this permission.
     # FIXME: untested
-    def scopes(permission)
+    def scopes_for(permission)
       parsed_response(
         path: "#{url_for(permission, prefix: 'policy')}/scopes"
       )
