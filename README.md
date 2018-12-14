@@ -1,14 +1,12 @@
 # Clonk [![Gem Version](https://badge.fury.io/rb/clonk.svg)](https://badge.fury.io/rb/clonk)
 
-This is a gem that'll help you seed an instance of Red Hat SSO. Right now, it's still a work-in-progress, but it shouldn't be long before it's got everything I think it needs.
+This is a gem that'll help you seed an instance of Red Hat SSO or Keycloak.
 
-It makes some assumptions about what's in your environment at the moment, using `dotenv`. While developing, I'm keeping the following variables in there.
+You should initialize the following environment variables. They aren't used by Clonk, but your Red Hat SSO instance will need them to create an admin user,
 
 ```
-SSO_REALM="master"
-SSO_BASE_URL="http://localhost:8080/auth"
-SSO_USERNAME="user"
-SSO_PASSWORD="password"
+SSO_ADMIN_USERNAME
+SSO_ADMIN_PASSWORD
 ```
 
 It's recommended to spin up an SSO instance alongside this to see what effects you're having on it. Here, it's important that the `preview` profile is used, so that we can use the `realm-management` client to take care of permissions in the realm.
@@ -17,22 +15,55 @@ It's recommended to spin up an SSO instance alongside this to see what effects y
 docker run --rm -p 8080:8080 -e JAVA_OPTS_APPEND="-Dkeycloak.profile=preview" -e SSO_ADMIN_USERNAME=user -e SSO_ADMIN_PASSWORD=password registry.access.redhat.com/redhat-sso-7/sso72-openshift
 ```
 
+You're also able to use Keycloak, but additional configuration may be required to use permissions, policies and other features.
+
 ## Usage
 
-Clonk exposes SSO objects as ActiveRecord-esque models. As a short demonstration:
+### Authenticating with SSO
+
+To authenticate with SSO, create a connection. You'll use this to interface with SSO. This is done in the demo seed script as follows:
 
 ```
-2.5.1 :003 > Clonk::Group.all
- => [#<Clonk::Group:0x00007fe7139ecda0 @name="another-test", @id="42b28060-7f4f-4b6d-82fd-6af031881a9e", @realm="master">, #<Clonk::Group:0x00007fe713808228 @name="chaos-chaos", @id="05af3f68-44d6-4973-8834-e957822e43ef", @realm="master">]
-2.5.1 :004 > Clonk::Group.all.first.config
- => {"id"=>"42b28060-7f4f-4b6d-82fd-6af031881a9e", "name"=>"another-test", "path"=>"/another-test", "attributes"=>{}, "realmRoles"=>[], "clientRoles"=>{}, "subGroups"=>[], "access"=>{"view"=>true, "manage"=>true, "manageMembership"=>true}}
+sso = Clonk::Connection.new(
+  base_url: 'http://sso:8080',
+  realm_id: 'master',
+  username: 'user',
+  password: 'password',
+  client_id: 'admin-cli'
+)
 ```
 
-`Group.all` casts all groups in the realm to `Clonk::Group` objects...
+This will retrieve an access token against the realm whose ID you supplied. However, you can change the realm used by the connection by supplying a new `realm` object to the connection. Create a new realm to play with...
 
-...but you can access their plain JSON config with `Group#config`.
+```
+sso.realm = sso.create_realm(realm: 'marauders-map')
+```
 
-Right now, you can check the `lib` folder for details of which methods are exposed, but I'm looking to add documentation in the very near future. Think of this as a soft launch.
+...or use an existing one.
+
+```
+sso.realm = sso.realms.first
+```
+
+
+### Interfacing with SSO
+
+Clonk exposes SSO objects as ActiveRecord-esque models. You're also able to view all attributes each object has in SSO using the `config` method. As a short demonstration:
+
+```
+irb(main):022:0> sso.groups
+=> [#<Clonk::Group:0x000055ea7e812ef0 @name="McCree", @id="b72aa189-f188-433a-a05c-b89bb46e62a3">, #<Clonk::Group:0x000055ea7e812ec8 @name="Sombra", @id="f5edda09-4c39-43c3-bde4-5a32a079f58a">, #<Clonk::Group:0x000055ea7e812ea0 @name="bar", @id="6683dcb7-18ae-4695-bf93-5a4b2c8e8bc9">, #<Clonk::Group:0x000055ea7e812e78 @name="foo", @id="7f4826c8-85e4-4a7b-aa52-b162ef286d59">]
+irb(main):023:0> sso.config(sso.groups.first)
+=> {"id"=>"b72aa189-f188-433a-a05c-b89bb46e62a3", "name"=>"McCree", "path"=>"/McCree", "attributes"=>{}, "realmRoles"=>[], "clientRoles"=>{}, "subGroups"=>[{"id"=>"f8dbfe41-1165-4d21-9d4e-62a5f89c5abf", "name"=>"Roadhog", "path"=>"/McCree/Roadhog", "attributes"=>{}, "realmRoles"=>[], "clientRoles"=>{}, "subGroups"=>[]}], "access"=>{"view"=>true, "manage"=>true, "manageMembership"=>true}}
+```
+
+`groups` casts all groups in the realm to `Clonk::Group` objects...
+
+...but you can access their plain JSON config with `Clonk::Connection#config`.
+
+There are plenty of methods you can use that wrap the API very nicely – you're able to create and interface with a variety of objects in SSO.
+
+Documentation is available on [RubyGems](https://www.rubydoc.info/gems/clonk).
 
 ## Why?
 

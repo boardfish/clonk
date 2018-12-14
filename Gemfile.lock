@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    clonk (1.0.0)
+    clonk (2.0.0)
       faraday
       faraday_middleware
 
