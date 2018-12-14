@@ -4,16 +4,19 @@ module Clonk
   # Represents a permission in SSO. Methods on Clonk::Connection can be used to
   # index its policies, resources and associated scopes
   class Permission
-    def initialize(permission_response, realm)
+    def initialize(permission_response)
       @id = permission_response['id']
-      @realm = realm
+      @name = permission_response['name']
     end
   end
 
   # Defines a connection to SSO.
   class Connection
     def permissions
-      clients.find { |client| client.name == 'realm-management' }
+      realm_management = clients.find { |client| client.name == 'realm-management' }
+      objects(type: 'Permission',
+        path: "/clients/#{realm_management.id}/authz/resource-server/permission"
+      )
     end
 
     ##
