@@ -164,5 +164,13 @@ module Clonk
       )
       "#{client_url}/authz/resource-server/#{prefix}/#{permission.id}"
     end
+
+    def logout_url(realm_id: @realm.name, client_id: @client_id, redirect_uri:)
+      "#{@base_url}/realms/#{realm_id}/protocol/openid-connect/logout?redirect_uri=#{CGI.escape(redirect_uri)}"
+    end
+
+    def login_url(realm_id: @realm.name, redirect_uri:, client_id: @client_id)
+      "#{@base_url}/realms/#{realm_id}/protocol/openid-connect/auth?response_type=code&client_id=#{client_id}&redirect_uri=#{CGI.escape(redirect_uri)}"
+    end
   end
 end
