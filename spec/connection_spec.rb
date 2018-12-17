@@ -7,12 +7,12 @@ describe 'Clonk::Connection' do
 
   it 'returns a correct logout URI' do
     expect(client.logout_url(redirect_uri: 'http://localhost:2000'))
-      .to eq('http://sso:8080/realms/test/protocol/openid-connect/logout?redirect_uri=http%3A%2F%2Flocalhost%3A2000')
+      .to eq('http://sso:8080/auth/realms/test/protocol/openid-connect/logout?redirect_uri=http%3A%2F%2Flocalhost%3A2000')
   end
 
   it 'returns a correct logout URI' do
     expect(client.login_url(redirect_uri: 'http://localhost:2000'))
-      .to eq('http://sso:8080/realms/test/protocol/openid-connect/auth?response_type=code&client_id=admin-cli&redirect_uri=http%3A%2F%2Flocalhost%3A2000')
+      .to eq('http://sso:8080/auth/realms/test/protocol/openid-connect/auth?response_type=code&client_id=admin-cli&redirect_uri=http%3A%2F%2Flocalhost%3A2000')
   end
 
   context 'users' do

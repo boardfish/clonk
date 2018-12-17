@@ -20,6 +20,14 @@ module Clonk
         faraday.headers['Authorization'] = "Bearer #{token}" if token
       end
     end
+
+    def logout_url(base_url:, realm_id:, redirect_uri:)
+      "#{base_url}/auth/realms/#{realm_id}/protocol/openid-connect/logout?redirect_uri=#{CGI.escape(redirect_uri)}"
+    end
+
+    def login_url(base_url:, realm_id:, redirect_uri:, client_id:)
+      "#{base_url}/auth/realms/#{realm_id}/protocol/openid-connect/auth?response_type=code&client_id=#{client_id}&redirect_uri=#{CGI.escape(redirect_uri)}"
+    end
   end
 end
 
