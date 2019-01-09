@@ -5,6 +5,10 @@ module Clonk
   class Realm
     attr_reader :name
 
+    def id
+      name
+    end
+
     def initialize(realm_response)
       @name = realm_response['realm'] || realm_response['id']
     end

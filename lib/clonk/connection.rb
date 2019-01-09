@@ -155,6 +155,7 @@ module Clonk
     def url_for(target, prefix: 'permision/scope')
       class_name = target.class.name.split('::').last.downcase
       url_for_permission(target, prefix: prefix) if class_name == 'permission'
+      return "#{realm_admin_root(target)}" if class_name == 'realm'
       "#{realm_admin_root}/#{class_name}s/#{target.id}"
     end
 
