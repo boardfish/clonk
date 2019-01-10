@@ -65,6 +65,7 @@ module Clonk
       class_name = object.class.name.split('::').last.downcase + 's'
       class_name = 'roles-by-id' if class_name == 'roles'
       route = realm_admin_root + "/#{class_name}/#{object.id}"
+      return parsed_response(path: url_fo(object)) if class_name == 'realm'
       parsed_response(path: route)
     end
 
