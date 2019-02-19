@@ -107,7 +107,7 @@ module Clonk
 
     ##
     # Defines a Faraday::Connection object linked to the SSO instance.
-    def connection(raise_error: true, json: true, token: @access_token)
+    def connection(raise_error: false, json: true, token: @access_token)
       Faraday.new(url: @base_url) do |faraday|
         faraday.request(json ? :json : :url_encoded)
         faraday.use Faraday::Response::RaiseError if raise_error

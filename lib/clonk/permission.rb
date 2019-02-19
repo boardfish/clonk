@@ -4,6 +4,9 @@ module Clonk
   # Represents a permission in SSO. Methods on Clonk::Connection can be used to
   # index its policies, resources and associated scopes
   class Permission
+    attr_reader :id
+    attr_reader :name
+
     def initialize(permission_response)
       @id = permission_response['id']
       @name = permission_response['name']
@@ -12,11 +15,23 @@ module Clonk
 
   # Defines a connection to SSO.
   class Connection
-    def permissions
+    ##
+    # Lists the permissions associated with an object.
+    # If an object is not provided, all permissions in the realm-management
+    # client are returned.
+    def permissions(object: nil)
+      # list all permissions from realm-management
       realm_management = clients.find { |client| client.name == 'realm-management' }
-      objects(type: 'Permission',
-        path: "/clients/#{realm_management.id}/authz/resource-server/permission"
+      all_permissions = objects(
+        type: 'Permission',
+        path: "#{url_for(realm_management)}/authz/resource-server/permission".delete_prefix(realm_admin_root)
       )
+      return all_permissions unless object
+      # map the scopePermissions hash to a new one with the permission objects
+      object_permissions = parsed_response(path: "#{url_for(object)}/management/permissions")
+      object_permissions['scopePermissions'].to_h { |name, id| 
+        [name, all_permissions.find { |permission| permission.id == id }]
+      }
     end
 
     ##
