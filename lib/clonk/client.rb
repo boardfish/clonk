@@ -41,19 +41,6 @@ module Clonk
     end
 
     ##
-    # Lists the client's permission IDs, if permissions are enabled.
-    # These will be returned as either a boolean (false) if disabled,
-    # or a hash of permission types and IDs.
-    # FIXME: Move to RHSSO so that permissions can actually be used!
-    # FIXME: Write test!
-
-    def permissions(client:)
-      parsed_response(
-        path: "#{url_for(client)}/management/permissions"
-      )['scopePermissions'] || false
-    end
-
-    ##
     # Enables or disables permissions for some object
     # FIXME: Write test!
 
