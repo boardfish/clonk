@@ -5,9 +5,9 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |s|
   s.name = 'clonk'
-  s.version = '2.2.8'
+  s.version = '2.2.9'
   s.authors = ['Simon Fish']
-  s.date = '2019-02-19'
+  s.date = '2019-02-21'
   s.summary = 'Keycloak/RHSSO admin API client'
   s.files = Dir['lib/**/**.rb']
   s.add_runtime_dependency 'faraday'

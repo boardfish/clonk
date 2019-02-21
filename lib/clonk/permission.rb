@@ -39,7 +39,7 @@ module Clonk
     # FIXME: untested!
     def policies_for(permission)
       parsed_response(
-        path: "#{url_for(permission, prefix: 'policy')}/associatedPolicies"
+        path: "#{url_for_permission(permission, prefix: 'policy')}/associatedPolicies"
       )
     end
 
@@ -48,7 +48,7 @@ module Clonk
     # FIXME: untested!
     def resources_for(permission)
       parsed_response(
-        path: "#{url_for(permission, prefix: 'policy')}/resources"
+        path: "#{url_for_permission(permission, prefix: 'policy')}/resources"
       )
     end
 
@@ -57,7 +57,7 @@ module Clonk
     # FIXME: untested
     def scopes_for(permission)
       parsed_response(
-        path: "#{url_for(permission, prefix: 'policy')}/scopes"
+        path: "#{url_for_permission(permission, prefix: 'policy')}/scopes"
       )
     end
 
@@ -68,9 +68,9 @@ module Clonk
       permission:, policies: [], resources: [], scopes: []
     )
       data = config(permission).merge(
-        policies: policies(permission) + policies,
-        resources: resources(permission) + resources,
-        scopes: scopes(permission) + scopes
+        "policies" => policies_for(permission) + policies,
+        "resources" => resources_for(permission) + resources,
+        "scopes" => scopes_for(permission) + scopes
       )
       parsed_response(
         path: url_for(permission),

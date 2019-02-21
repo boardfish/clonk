@@ -63,9 +63,14 @@ module Clonk
     #++
     def config(object)
       class_name = object.class.name.split('::').last.downcase + 's'
+      return parsed_response(path: url_for(object)) if class_name == 'realms'
       class_name = 'roles-by-id' if class_name == 'roles'
-      route = realm_admin_root + "/#{class_name}/#{object.id}"
-      return parsed_response(path: url_fo(object)) if class_name == 'realm'
+      if class_name == 'permissions'
+        realm_management = clients.find { |client| client.name == 'realm-management' }
+        route = "#{url_for(realm_management)}/authz/resource-server/permission/scope/#{object.id}"
+      else
+        route = realm_admin_root + "/#{class_name}/#{object.id}"
+      end
       parsed_response(path: route)
     end
 
