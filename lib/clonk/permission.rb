@@ -38,9 +38,7 @@ module Clonk
     # Returns the policy IDs associated with a permission.
     # FIXME: untested!
     def policies_for(permission)
-      parsed_response(
-        path: "#{url_for_permission(permission, prefix: 'policy')}/associatedPolicies"
-      )
+      objects(type: 'Policy', path: "#{url_for_permission(permission, prefix: 'policy')}/associatedPolicies", root: '')
     end
 
     ##
@@ -68,11 +66,11 @@ module Clonk
       permission:, policies: [], resources: [], scopes: []
     )
       data = config(permission).merge(
-        "policies" => policies_for(permission) + policies,
-        "resources" => resources_for(permission) + resources,
-        "scopes" => scopes_for(permission) + scopes
+        "policies" => (policies_for(permission) + policies).map(&:id).compact,
+        "resources" => (resources_for(permission) + resources).map { |r| r['_id'] }.compact,
+        "scopes" => (scopes_for(permission) + scopes).map { |s| s['id'] }.compact
       )
-      parsed_response(
+      response(
         path: url_for(permission),
         data: data,
         method: :put

@@ -158,9 +158,9 @@ module Clonk
     # within SSO for some reason, especially when fetching scopes, resources and
     # policies.
     # FIXME: Does not work with realms - realm_admin_root does, though.
-    def url_for(target, prefix: 'permision/scope')
+    def url_for(target, prefix: 'permission/scope')
       class_name = target.class.name.split('::').last.downcase
-      url_for_permission(target, prefix: prefix) if class_name == 'permission'
+      return url_for_permission(target, prefix: prefix) if class_name == 'permission'
       return "#{realm_admin_root(target)}" if class_name == 'realm'
       "#{realm_admin_root}/#{class_name}s/#{target.id}"
     end
