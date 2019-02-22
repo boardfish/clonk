@@ -3,7 +3,7 @@ lib/clonk/role.rb 9a74ded3caff4745db69bdb5e6ddc52e67d91c44
 lib/clonk/user.rb e3693c5f59a7e45a6c2fd98f1e01e918e61eabc9
 lib/clonk/group.rb 72b9667d70dcd36a9cfe0658063d50ba827d9d50
 lib/clonk/realm.rb ca2a296941d5289dbfa51b681a2a25ab124c5c84
-lib/clonk/client.rb ba223aa668dead44fcd2b996b68a3db1ef4ddc9c
+lib/clonk/client.rb c68e73fd45df209c5aef4551b437dafe74f3b45f
 lib/clonk/policy.rb c0c80bdc083073bf2fa10856e1e1cbc4b0560d16
-lib/clonk/connection.rb d38b3d9a25dcd11e29aba0fcfc2a5006682c549d
-lib/clonk/permission.rb 563e74e4fc616b6e45dac75385fbd8c589947c1f
+lib/clonk/connection.rb 0fb9d6483a0a2e9fb03107c884dc365db184fbab
+lib/clonk/permission.rb 34c9395807d3fa85288676bc5ad50db4690a6ee0
